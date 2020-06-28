@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System
+using System;
 
 public class Cell : MonoBehaviour
 {
@@ -9,16 +9,16 @@ public class Cell : MonoBehaviour
 
 
     [Header("Куда идешь при прохождении")]
-    [SerializeField] int passRight;
-    [SerializeField] int passLeft;
-    [SerializeField] int passUp;
-    [SerializeField] int passDown;
+    public int passRight;
+    public int passLeft;
+    public int passUp;
+    public int passDown;
 
     [Header("Куда идешь при старте движения")]
-    [SerializeField] int startMovingRight;
-    [SerializeField] int startMovingLeft;
-    [SerializeField] int startMovingUp;
-    [SerializeField] int startMovingDown;
+    public int startMovingRight;
+    public int startMovingLeft;
+    public int startMovingUp;
+    public int startMovingDown;
 
     [Header("Оформление клетки")]
     [SerializeField] Sprite cellIcon;
@@ -28,13 +28,14 @@ public class Cell : MonoBehaviour
 
 
     [Header("Вид на клетку")]
-    [SerializeField] TypesOfView cellVeiw;
+    public TypesOfView cellView;
+    public Vector3 view;
 
     [Header("Положения плееров на клетке")]
-    [SerializeField] GameObject redPosition;
-    [SerializeField] GameObject bluePosition;
-    [SerializeField] GameObject greenPosition;
-    [SerializeField] GameObject yellowPosition;
+    [SerializeField] public GameObject redPosition;
+    [SerializeField] public GameObject bluePosition;
+    [SerializeField] public GameObject greenPosition;
+    [SerializeField] public GameObject yellowPosition;
 
     
 
@@ -46,7 +47,7 @@ public class Cell : MonoBehaviour
         KLONDIKE
     }
 
-    enum TypesOfView
+    public enum TypesOfView
     { 
         FROM_DOWN,
         FROM_RIGHT,
@@ -62,8 +63,41 @@ public class Cell : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //TODO открыть инфо окно
+
+        string cellWayTitle = "BUSINESS";
+        if (way == TypesOfWays.CRIMINAL)
+        {
+            cellWayTitle = "CRIMINAL";
+        }
+        else if (way == TypesOfWays.COLONIAL)
+        {
+            cellWayTitle = "COLONIAL";
+        }
+        else if (way == TypesOfWays.KLONDIKE)
+        {
+            cellWayTitle = "KLONDIKE";
+        }
+
+        UIManager.Instance.ShowDescriptionWindow(cellIcon, cellTitle, cellDescription, cellWayTitle);
     }
 
-
+    private void Start()
+    {
+        if (cellView == TypesOfView.FROM_DOWN)
+        {
+            view = Vector3.zero;
+        }
+        else if (cellView == TypesOfView.FROM_RIGHT)
+        {
+            view = new Vector3(0, -90f, 0);
+        }
+        else if (cellView == TypesOfView.FROM_LEFT)
+        {
+            view = new Vector3(0, 90f, 0);
+        }
+        else if (cellView == TypesOfView.FROM_UP)
+        {
+            view = new Vector3(0, 180f, 0);
+        }
+    }
 }

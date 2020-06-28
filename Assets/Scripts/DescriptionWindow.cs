@@ -28,13 +28,14 @@ public class DescriptionWindow : MonoBehaviour
     [SerializeField] Color criminalColor;
     [SerializeField] Color colonialColor;
     [SerializeField] Color klondikeColor;
-    Text title;
-    Text description;
-    Text wayTitle;
-    Image icon;
+    [SerializeField] Text title;
+    [SerializeField] Text description;
+    [SerializeField] Text wayTitle;
+    [SerializeField] Image icon;
 
     public void ChangeDescriptionWindow(Sprite cellIcon, string cellTitle, string cellDescription, string cellWayTitle)
     {
+        
         title.text = cellTitle;
         description.text = cellDescription;
         wayTitle.text = cellWayTitle;
@@ -58,5 +59,12 @@ public class DescriptionWindow : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.Instance.HideWindow(gameObject.GetComponent<CanvasGroup>());
+        }
+    }
 
 }
