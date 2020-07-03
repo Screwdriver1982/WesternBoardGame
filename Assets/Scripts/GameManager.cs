@@ -22,10 +22,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    [Header("Клетки поля")]
-    public Cell[] cells;
-
-
+    
     [Header("Игроки")]
     [SerializeField] PlayerMovement[] players;
 

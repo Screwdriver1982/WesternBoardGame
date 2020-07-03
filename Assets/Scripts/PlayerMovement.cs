@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Camera playerCamera;
 
 
-    [SerializeField] int currentCellNum;
+    
     [SerializeField] Cell currentCell;
 
     [SerializeField] bool playerTurn = true;
@@ -37,8 +37,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        currentCell = GameManager.Instance.cells[currentCellNum];
-
+        
         if (playerColor == PlayerColors.RED)
         {
             startPosition = currentCell.redPosition.transform.position;
@@ -67,11 +66,10 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
         {
             
-            if (startMoveOrPass && currentCell.startMovingUp !=0   )
+            if (startMoveOrPass && currentCell.startMovingUp !=null   )
             {
                 
-                int nextCellNum =  currentCell.startMovingUp;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell =  currentCell.startMovingUp;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -83,8 +81,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.startMovingUp;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.startMovingUp;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -109,11 +106,10 @@ public class PlayerMovement : MonoBehaviour
 
 
             }
-            else if (!startMoveOrPass && currentCell.passUp !=0 )
+            else if (!startMoveOrPass && currentCell.passUp !=null )
             {
 
-                int nextCellNum = currentCell.passUp;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell = currentCell.passUp;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -125,8 +121,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.passUp;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.passUp;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -162,11 +157,10 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
         {
 
-            if (startMoveOrPass && currentCell.startMovingDown != 0)
+            if (startMoveOrPass && currentCell.startMovingDown != null)
             {
 
-                int nextCellNum = currentCell.startMovingDown;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell = currentCell.startMovingDown;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -178,8 +172,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.startMovingDown;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.startMovingDown;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -204,11 +197,10 @@ public class PlayerMovement : MonoBehaviour
 
 
             }
-            else if (!startMoveOrPass && currentCell.passDown != 0)
+            else if (!startMoveOrPass && currentCell.passDown != null)
             {
 
-                int nextCellNum = currentCell.passDown;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell = currentCell.passDown;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -220,8 +212,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.passDown;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.passDown;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -255,11 +246,10 @@ public class PlayerMovement : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.LeftArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
         {
-            if (startMoveOrPass && currentCell.startMovingLeft != 0)
+            if (startMoveOrPass && currentCell.startMovingLeft != null)
             {
 
-                int nextCellNum = currentCell.startMovingLeft;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell = currentCell.startMovingLeft;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -271,8 +261,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.startMovingLeft;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.startMovingLeft;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -297,11 +286,11 @@ public class PlayerMovement : MonoBehaviour
 
 
             }
-            else if (!startMoveOrPass && currentCell.passLeft != 0)
+            else if (!startMoveOrPass && currentCell.passLeft != null)
             {
 
-                int nextCellNum = currentCell.passLeft;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                
+                Cell nextCell = currentCell.passLeft;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -313,8 +302,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.passLeft;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.passLeft;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -347,11 +335,10 @@ public class PlayerMovement : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.RightArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
         {
-            if (startMoveOrPass && currentCell.startMovingRight != 0)
+            if (startMoveOrPass && currentCell.startMovingRight != null)
             {
 
-                int nextCellNum = currentCell.startMovingRight;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell = currentCell.startMovingRight;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -363,8 +350,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.startMovingRight;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.startMovingRight;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)
@@ -389,11 +375,10 @@ public class PlayerMovement : MonoBehaviour
 
 
             }
-            else if (!startMoveOrPass && currentCell.passRight != 0)
+            else if (!startMoveOrPass && currentCell.passRight != null)
             {
 
-                int nextCellNum = currentCell.passRight;
-                Cell nextCell = GameManager.Instance.cells[nextCellNum];
+                Cell nextCell = currentCell.passRight;
                 bool needRotation;
 
                 if (nextCell.cellView == currentCell.cellView)
@@ -405,8 +390,7 @@ public class PlayerMovement : MonoBehaviour
                     needRotation = true;
                 }
 
-                currentCellNum = currentCell.passRight;
-                currentCell = GameManager.Instance.cells[currentCellNum];
+                currentCell = currentCell.passRight;
                 allowMovement = false;
                 moveLeft -= 1;
                 if (moveLeft > 0)

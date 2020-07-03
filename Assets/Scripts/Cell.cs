@@ -9,16 +9,16 @@ public class Cell : MonoBehaviour
 
 
     [Header("Куда идешь при прохождении")]
-    public int passRight;
-    public int passLeft;
-    public int passUp;
-    public int passDown;
+    public Cell passRight;
+    public Cell passLeft;
+    public Cell passUp;
+    public Cell passDown;
 
     [Header("Куда идешь при старте движения")]
-    public int startMovingRight;
-    public int startMovingLeft;
-    public int startMovingUp;
-    public int startMovingDown;
+    public Cell startMovingRight;
+    public Cell startMovingLeft;
+    public Cell startMovingUp;
+    public Cell startMovingDown;
 
     [Header("Оформление клетки")]
     [SerializeField] Sprite cellIcon;
