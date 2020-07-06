@@ -19,12 +19,8 @@ public class Dice : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
-        ThrowDice();
-    }
 
-    private void ThrowDice()
+    public void ThrowDice()
     {
         rb.isKinematic = false;
         transform.position = startTransform;

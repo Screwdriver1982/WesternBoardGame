@@ -97,4 +97,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceTransform: {fileID: 0}
-  additionalAltitude: 10
+  additionalAltitude: 16

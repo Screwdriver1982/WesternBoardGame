@@ -25,11 +25,30 @@ public class GameManager : MonoBehaviour
     
     [Header("Игроки")]
     [SerializeField] PlayerMovement[] players;
-
     [SerializeField] int activePlayerNum;
+    GameStates activeGMState;
+
+
+    enum GameStates
+    { 
+        WELCOME_WINDOW, //показываем приветственное окно
+        PLAYER_TURN_ALARM, //сообщаем, что ходит определенный игрок
+        START_DICE_THROW_WAITING, //ожидаем, когда игрок кинет кубик, для начальной сортировки игроков
+        TURN_DICE_THROW_WAITING, // ожидаем, когда игрок кинет кубик, чтобы понять сколько ему нужно походить
+        TURN_CAP_MOVING_WAITING, // ожидаем, когда игрок походит фишкой
+        FIRM_BUY_WAITING, //ожидаем когда игрок решит покупает он или нет акцию
+        NEW_CIRCLE_WINDOW //окно начала нового круга
+
+    
+    }
+
+
+
+
 
     private void Start()
     {
+        activeGMState = GameStates.WELCOME_WINDOW;
         activePlayerNum = 0;
         players[activePlayerNum].GiveTheTurnToPlayer();
 
@@ -52,6 +71,17 @@ public class GameManager : MonoBehaviour
             players[activePlayerNum].GiveTheTurnToPlayer();
 
         }
+    }
+
+
+    void changeGMState(GameStates newState)
+    { 
+    
+    }
+
+    void stateUpdate()
+    { 
+    
     }
 
 }
