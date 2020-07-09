@@ -29,6 +29,10 @@ public class UIManager : MonoBehaviour
     [Header("Появление окон")]
     [SerializeField] float fadeDuration;
     [SerializeField] GameObject descriptionWindow;
+    [SerializeField] UIActivePlayer activePlayerUI;
+    [SerializeField] UINotActivePlayer secondPlayerUI;
+    [SerializeField] UINotActivePlayer thirdPlayerUI;
+    [SerializeField] UINotActivePlayer fourthPlayerUI;
 
     bool isDialogOpen = false;
 
@@ -64,5 +68,13 @@ public class UIManager : MonoBehaviour
            ).SetUpdate(true);
     }
 
+    public void SetPlayersUI(Player activePlayer, Player secondPlayer, Player thirdPlayer, Player fourthPlayer)
+    {
+        activePlayerUI.SetPlayer(activePlayer);
+        secondPlayerUI.SetPlayer(secondPlayer);
+        thirdPlayerUI.SetPlayer(thirdPlayer);
+        fourthPlayerUI.SetPlayer(fourthPlayer);
+
+    }
 
 }

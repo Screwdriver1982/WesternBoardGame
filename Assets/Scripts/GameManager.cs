@@ -22,15 +22,20 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    
+
     [Header("Игроки")]
-    [SerializeField] PlayerMovement[] players;
+    [SerializeField] PlayerMovement[] playerMovements;
     [SerializeField] int activePlayerNum;
+
+    [Header("Работа с UI")]
+    [SerializeField] UIManager UIManager;
+
+    [Header("Состояния игры")]
     GameStates activeGMState;
 
 
     enum GameStates
-    { 
+    {
         WELCOME_WINDOW, //показываем приветственное окно
         PLAYER_TURN_ALARM, //сообщаем, что ходит определенный игрок
         START_DICE_THROW_WAITING, //ожидаем, когда игрок кинет кубик, для начальной сортировки игроков
@@ -39,7 +44,7 @@ public class GameManager : MonoBehaviour
         FIRM_BUY_WAITING, //ожидаем когда игрок решит покупает он или нет акцию
         NEW_CIRCLE_WINDOW //окно начала нового круга
 
-    
+
     }
 
 
@@ -50,7 +55,8 @@ public class GameManager : MonoBehaviour
     {
         activeGMState = GameStates.WELCOME_WINDOW;
         activePlayerNum = 0;
-        players[activePlayerNum].GiveTheTurnToPlayer();
+        playerMovements[activePlayerNum].GiveTheTurnToPlayer();
+        SetPlayerInUI();
 
     }
 
@@ -58,30 +64,40 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            players[activePlayerNum].TakeTurnFromPlayer();
+            playerMovements[activePlayerNum].TakeTurnFromPlayer();
 
-            if (activePlayerNum != (players.Length - 1))
-            {
-                activePlayerNum += 1;
-            }
-            else 
-            {
-                activePlayerNum = 0;
-            }
-            players[activePlayerNum].GiveTheTurnToPlayer();
+            activePlayerNum = (activePlayerNum + 1) % 4;
+            playerMovements[activePlayerNum].GiveTheTurnToPlayer();
+            SetPlayerInUI();
 
         }
     }
 
 
     void changeGMState(GameStates newState)
-    { 
-    
+    {
+
     }
 
     void stateUpdate()
-    { 
-    
+    {
+
+    }
+
+    void SetPlayerInUI()
+    {
+        Player activePlayer = playerMovements[activePlayerNum].GetComponent<Player>();
+        Player secondPlayer = playerMovements[(activePlayerNum+1) % 4].GetComponent<Player>();
+        Player thirdPlayer = playerMovements[(activePlayerNum + 2) % 4].GetComponent<Player>();
+        Player fourthPlayer = playerMovements[(activePlayerNum + 3) % 4].GetComponent<Player>();
+
+        if (activePlayer != null && secondPlayer != null && thirdPlayer != null && fourthPlayer != null)
+        {
+
+            UIManager.SetPlayersUI(activePlayer, secondPlayer, thirdPlayer, fourthPlayer);
+        }
+
+
     }
 
 }

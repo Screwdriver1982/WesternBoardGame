@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 563663186166456359}
   - component: {fileID: 563663186167587559}
   - component: {fileID: 5921468193690363590}
+  - component: {fileID: 5438831533782607454}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -98,13 +99,47 @@ MonoBehaviour:
   jumpPower: 3
   rotateTime: 0.5
   playerCamera: {fileID: 523123574810748280}
-  currentCellNum: 0
   currentCell: {fileID: 0}
   playerTurn: 0
   startMoveOrPass: 1
   moveLeft: 10
   allowMovement: 1
   dialogIsOpen: 0
+--- !u!114 &5438831533782607454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563663186165333031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29f99c7b09bbdd641a4d73410a675722, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cash: 0
+  gold: 0
+  oil: 0
+  cars: 0
+  cola: 0
+  drugs: 0
+  brains: 0
+  capital: 0
+  robberiedMoney: 0
+  colonyMoney: 0
+  startingLoan: 0
+  colonyLoan: 0
+  policeCard: 0
+  bossCard: 0
+  armyCard: 0
+  woolfyCard: 0
+  rabbyCard: 0
+  taxFreeCard: 0
+  badHarvestCard: 0
+  mediaCrisisCard: 0
+  loans: 
+  deposites: 
+  playerColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &6663938436003449444
 GameObject:
   m_ObjectHideFlags: 0
