@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96369920da44cec4eb1821240bb52734, type: 3}
+  m_Name: Street1
+  m_EditorClassIdentifier: 
+  shareTitle: "\u0423\u043B\u0438\u0446\u0430 N1"
+  shareDescription: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C 10 000$"
+  icon: {fileID: -2811984867319289777, guid: d2a9c8d5bf614a343befa6864097ef88, type: 3}
+  typeOfShares: Common
+  cost: 50000
+  revenuePercent: 0
+  revenueFix: 10000
+  goldRevenueFix: 0
+  carsFromCapital: 0
+  colaFromCapital: 0

@@ -36,14 +36,17 @@ public class UIActivePlayer : MonoBehaviour
     {
         if (player != null)
         {
-            player.onWalletChange -= PlayerWalletUpdate;
+            player.onWalletChanges -= PlayerWalletUpdate;
+            player.onCardsChanges -= PlayerCardsUpdate;
         }
 
 
         player = newPlayer;
         playerAvatar.color = player.playerColor;
-        player.onWalletChange += PlayerWalletUpdate;
+        player.onWalletChanges += PlayerWalletUpdate;
+        player.onCardsChanges += PlayerCardsUpdate;
         PlayerWalletUpdate();
+        PlayerCardsUpdate();
     }
 
     void PlayerWalletUpdate()
@@ -74,17 +77,19 @@ public class UIActivePlayer : MonoBehaviour
         //drugs.SetActive(player.drugs > 0);
         drugsText.text = "" + player.drugs;
 
-
-        bossCard.SetActive(player.bossCard);
-        policeCard.SetActive(player.policeCard);
-        armyCard.SetActive(player.armyCard);
-        woolfyCard.SetActive(player.woolfyCard);
-        rabbyCard.SetActive(player.rabbyCard);
-
         robberyText.gameObject.SetActive(player.robberiedMoney > 0);
         robberyText.text = "Награблено: " + player.robberiedMoney;
 
         colonyText.gameObject.SetActive(player.colonyMoney > 0);
         colonyText.text = "Колонии & Клондайк: " + player.colonyMoney;
+    }
+     
+    void PlayerCardsUpdate()
+    {   bossCard.SetActive(player.bossCard);
+        policeCard.SetActive(player.policeCard);
+        armyCard.SetActive(player.armyCard);
+        woolfyCard.SetActive(player.woolfyCard);
+        rabbyCard.SetActive(player.rabbyCard);
+
     }
 }

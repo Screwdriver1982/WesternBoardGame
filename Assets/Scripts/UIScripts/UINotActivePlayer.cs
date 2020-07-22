@@ -15,13 +15,13 @@ public class UINotActivePlayer : MonoBehaviour
     {
         if (player != null)
         {
-            player.onWalletChange -= PlayerWalletUpdate; 
+            player.onCashChanges -= PlayerWalletUpdate; 
         }
          
         
         player = newPlayer;
         playerAvatar.color = player.playerColor;
-        player.onWalletChange += PlayerWalletUpdate;
+        player.onCashChanges += PlayerWalletUpdate;
         PlayerWalletUpdate();
     }
 

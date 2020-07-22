@@ -5,24 +5,6 @@ using UnityEngine.UI;
 
 public class DescriptionWindow : MonoBehaviour
 {
-    #region Singleton
-    public static DescriptionWindow Instance { get; private set; }
-
-    private void Awake()
-    {
-
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-
-    }
-
-    #endregion
 
     [SerializeField] Color businessColor;
     [SerializeField] Color criminalColor;

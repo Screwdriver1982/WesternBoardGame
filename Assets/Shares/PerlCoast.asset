@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96369920da44cec4eb1821240bb52734, type: 3}
+  m_Name: PerlCoast
+  m_EditorClassIdentifier: 
+  shareTitle: "\u0416\u0435\u043C\u0447\u0443\u0433\u043E\u043D\u043E\u0441\u043D\u0430\u044F
+    \u041E\u0442\u043C\u0435\u043B\u044C"
+  shareDescription: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C 30%"
+  icon: {fileID: -8169799467558737034, guid: d2a9c8d5bf614a343befa6864097ef88, type: 3}
+  typeOfShares: Common
+  cost: 90000
+  revenuePercent: 0.3
+  revenueFix: 0
+  goldRevenueFix: 0
+  carsFromCapital: 0
+  colaFromCapital: 0

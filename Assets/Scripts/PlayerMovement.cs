@@ -2,423 +2,379 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Action onMovementDecrease = delegate { };
+    public Action onEnoughMoneyToMoveUpdate = delegate { };
+
     [SerializeField] PlayerColors playerColor;
+    [SerializeField] Player player;
+
+    [Header("В игре?")]
+    public bool inGame = true;
 
     [Header("Перемещение между клетками")]
     [SerializeField] float oneCellJumpTime;
-    [SerializeField] float jumpPower =3f;
-    [SerializeField] float rotateTime =1f;
+    [SerializeField] float jumpPower = 3f;
+    [SerializeField] float rotateTime = 1f;
+    [SerializeField] float activateTime = 1.2f;
 
-    [SerializeField] Camera playerCamera;
+    public Camera playerCamera;
+    public int turnMiss;
+    public bool toColony = false;
+    public bool secondCircleColony = false;
 
 
-    
-    [SerializeField] Cell currentCell;
+
+
+
+    public Cell currentCell;
+
 
     [SerializeField] bool playerTurn = true;
     [SerializeField] bool startMoveOrPass = true;
-    [SerializeField] int moveLeft = 6;
+    public int moveLeft = 6;
     [SerializeField] bool allowMovement;
     [SerializeField] bool dialogIsOpen = false;
+    public bool enoughMoney = true;
+    public bool negativeMoney = false;
+
+
 
     Vector3 startPosition;
 
     enum PlayerColors
-    { 
+    {
         RED,
         BLUE,
         GREEN,
         YELLOW
-    
+
     }
 
     private void Start()
     {
-        
-        if (playerColor == PlayerColors.RED)
-        {
-            startPosition = currentCell.redPosition.transform.position;
-            transform.position = startPosition;
-        }
-        if (playerColor == PlayerColors.BLUE)
-        {
-            startPosition = currentCell.bluePosition.transform.position;
-            transform.position = startPosition;
-        }
-        if (playerColor == PlayerColors.GREEN)
-        {
-            startPosition = currentCell.greenPosition.transform.position;
-            transform.position = startPosition;
-        }
-        if (playerColor == PlayerColors.YELLOW)
-        {
-            startPosition = currentCell.yellowPosition.transform.position;
-            transform.position = startPosition;
-        }
+        player.onWalletChanges += EnoughMoneyToMove;
+        GoToCellWithoutActivation(currentCell);
     }
 
     void Update()
     {
-        
-        if (Input.GetKeyDown(KeyCode.UpArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0 && enoughMoney)
         {
+            GameManager.Instance.SwitchCameraToPlayer(this);
+
+            if ((toColony|| secondCircleColony) && currentCell.alternativeWay)
+            {
+                if (startMoveOrPass && currentCell.startMovingUpA != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingUpA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingUpA;
+                    MoveNextCell(needRotation);
+
+
+
+                }
+                else if (!startMoveOrPass && currentCell.passUpA != null)
+                {
+
+                    Cell nextCell = currentCell.passUpA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passUpA;
+                    MoveNextCell(needRotation);
+
+
+                }
+            }
+            else
+            { 
+                if (startMoveOrPass && currentCell.startMovingUp != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingUp;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingUp;
+                    MoveNextCell(needRotation);
+
+
+
+                }
+                else if (!startMoveOrPass && currentCell.passUp != null)
+                {
+
+                    Cell nextCell = currentCell.passUp;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passUp;
+                    MoveNextCell(needRotation);
+
+
+
+
+
+
+
+                }
+            }
+
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.DownArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0 && enoughMoney)
+        {
+            GameManager.Instance.SwitchCameraToPlayer(this);
+
+            if ((toColony || secondCircleColony) && currentCell.alternativeWay)
+            {
+                if (startMoveOrPass && currentCell.startMovingDownA != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingDownA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingDownA;
+                    MoveNextCell(needRotation);
+
+                }
+                else if (!startMoveOrPass && currentCell.passDownA != null)
+                {
+
+                    Cell nextCell = currentCell.passDownA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passDownA;
+                    MoveNextCell(needRotation);
+
+                }
+            }
+            else
+            {
+
+                if (startMoveOrPass && currentCell.startMovingDown != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingDown;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingDown;
+                    MoveNextCell(needRotation);
+
+
+
+                }
+                else if (!startMoveOrPass && currentCell.passDown != null)
+                {
+
+                    Cell nextCell = currentCell.passDown;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passDown;
+                    MoveNextCell(needRotation);
+
+
+
+
+
+
+
+                }
+            }
+
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0 && enoughMoney)
+        {
+            GameManager.Instance.SwitchCameraToPlayer(this);
+            if ((toColony || secondCircleColony) && currentCell.alternativeWay)
+            {
+                if (startMoveOrPass && currentCell.startMovingLeftA != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingLeftA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingLeftA;
+                    MoveNextCell(needRotation);
+
+                }
+                else if (!startMoveOrPass && currentCell.passLeftA != null)
+                {
+
+
+                    Cell nextCell = currentCell.passLeftA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passLeftA;
+                    MoveNextCell(needRotation);
+
+                }
+            }
+            else
+            { 
+                if (startMoveOrPass && currentCell.startMovingLeft != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingLeft;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingLeft;
+                    MoveNextCell(needRotation);
+
+
+
+                }
+                else if (!startMoveOrPass && currentCell.passLeft != null)
+                {
+
+
+                    Cell nextCell = currentCell.passLeft;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passLeft;
+                    MoveNextCell(needRotation);
+
+
+
+
+
+
+
+                }
+            }
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.RightArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0 && enoughMoney)
+        {
+            GameManager.Instance.SwitchCameraToPlayer(this);
+
+            if ((toColony || secondCircleColony) && currentCell.alternativeWay)
+            {
+                if (startMoveOrPass && currentCell.startMovingRightA != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingRightA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingRightA;
+                    MoveNextCell(needRotation);
+
+
+
+                }
+                else if (!startMoveOrPass && currentCell.passRightA != null)
+                {
+
+                    Cell nextCell = currentCell.passRightA;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passRightA;
+                    MoveNextCell(needRotation);
+
+                }
+            }
+            else
+            {
+                if (startMoveOrPass && currentCell.startMovingRight != null)
+                {
+
+                    Cell nextCell = currentCell.startMovingRight;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.startMovingRight;
+                    MoveNextCell(needRotation);
+
+
+
+                }
+                else if (!startMoveOrPass && currentCell.passRight != null)
+                {
+
+                    Cell nextCell = currentCell.passRight;
+                    bool needRotation = IfNeedRotation(nextCell);
+                    TakeMoneyForMovement();
+                    currentCell = currentCell.passRight;
+                    MoveNextCell(needRotation);
+
+                }
+            }
             
-            if (startMoveOrPass && currentCell.startMovingUp !=null   )
-            {
-                
-                Cell nextCell =  currentCell.startMovingUp;
-                bool needRotation;
+        }
+    }
 
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else 
-                {
-                    needRotation = true;
-                }
+    public void JumpToCellAndActivateIt(Cell nextCell)
+    {
+        moveLeft = 1;
+        bool needRotation = IfNeedRotation(nextCell);
+        currentCell = nextCell;
+        MoveNextCell(needRotation);
+    }
 
-                currentCell = currentCell.startMovingUp;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
+    private bool IfNeedRotation(Cell nextCell)
+    {
+        bool needRotation;
+        if (nextCell.cellView == currentCell.cellView)
+        {
+            needRotation = false;
+        }
+        else
+        {
+            needRotation = true;
+        }
+        return needRotation;
+    }
 
+    private void MoveNextCell(bool needRotation)
+    {
+        allowMovement = false;
+        moveLeft -= 1;
+        toColony = false;
 
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else 
-                {
-                    JumpToCell();
-                }
-
-
-
-            }
-            else if (!startMoveOrPass && currentCell.passUp !=null )
-            {
-
-                Cell nextCell = currentCell.passUp;
-                bool needRotation;
-
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.passUp;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-
-
-
-
-            }
-            
-
+        //если идет второй круг и игрок все еще на колониальном круге, то этот флаг остается, если ушел с круга, то выключится
+        if (secondCircleColony)
+        {
+            secondCircleColony = currentCell.colonyCircle;
         }
 
-        else if (Input.GetKeyDown(KeyCode.DownArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
+
+        onMovementDecrease();
+        if (moveLeft > 0)
         {
-
-            if (startMoveOrPass && currentCell.startMovingDown != null)
-            {
-
-                Cell nextCell = currentCell.startMovingDown;
-                bool needRotation;
-
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.startMovingDown;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-            }
-            else if (!startMoveOrPass && currentCell.passDown != null)
-            {
-
-                Cell nextCell = currentCell.passDown;
-                bool needRotation;
-
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.passDown;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-
-
-
-
-            }
-
+            startMoveOrPass = false;
+        }
+        else
+        {
+            startMoveOrPass = true;
+            playerTurn = false;
         }
 
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
+
+        if (needRotation)
         {
-            if (startMoveOrPass && currentCell.startMovingLeft != null)
-            {
-
-                Cell nextCell = currentCell.startMovingLeft;
-                bool needRotation;
-
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.startMovingLeft;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-            }
-            else if (!startMoveOrPass && currentCell.passLeft != null)
-            {
-
-                
-                Cell nextCell = currentCell.passLeft;
-                bool needRotation;
-
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.passLeft;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-
-
-
-
-            }
+            transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
         }
-
-        else if (Input.GetKeyDown(KeyCode.RightArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0)
+        else
         {
-            if (startMoveOrPass && currentCell.startMovingRight != null)
-            {
+            JumpToCell();
+        }
+    }
 
-                Cell nextCell = currentCell.startMovingRight;
-                bool needRotation;
+    private void TakeMoneyForMovement()
+    {
+        if (currentCell.cellWayTitle == "COLONIAL" || currentCell.cellWayTitle == "KLONDIKE")
+        {
+            int colonyPrice = GameManager.Instance.colonyMovementCost;
+            player.WalletChange(colonyPrice, 0, 0, 0, 0, 0, 0, colonyPrice);
 
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.startMovingRight;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-            }
-            else if (!startMoveOrPass && currentCell.passRight != null)
-            {
-
-                Cell nextCell = currentCell.passRight;
-                bool needRotation;
-
-                if (nextCell.cellView == currentCell.cellView)
-                {
-                    needRotation = false;
-                }
-                else
-                {
-                    needRotation = true;
-                }
-
-                currentCell = currentCell.passRight;
-                allowMovement = false;
-                moveLeft -= 1;
-                if (moveLeft > 0)
-                {
-                    startMoveOrPass = false;
-                }
-                else
-                {
-                    startMoveOrPass = true;
-                }
-
-
-                if (needRotation)
-                {
-                    transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(JumpToCell);
-                }
-                else
-                {
-                    JumpToCell();
-                }
-
-
-
-
-
-
-
-            }
         }
     }
 
@@ -446,17 +402,22 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        transform.DOJump(newPosition, jumpPower, 1, oneCellJumpTime).OnComplete(AllowMovement);
+        transform.DOJump(newPosition, jumpPower, 1, oneCellJumpTime).OnComplete(MovementEnded);
     }
     private void AllowMovement()
     {
         allowMovement = true;
     }
 
-    public void GiveTheTurnToPlayer()
+    public void GiveTheTurnToPlayer(int moves)
     {
         playerCamera.gameObject.SetActive(true);
+        GameManager.Instance.activeCamera = playerCamera;
         playerTurn = true;
+        moveLeft = moves;
+        EnoughMoneyToMove();
+
+
     }
 
     public void TakeTurnFromPlayer()
@@ -464,4 +425,86 @@ public class PlayerMovement : MonoBehaviour
         playerCamera.gameObject.SetActive(false);
         playerTurn = false;
     }
+
+    void MovementEnded()
+    {
+        //если попадаем на клетку счетчика кругов в колонии, то включаем поход на второй круг
+        if (currentCell.colonyCircleCounter)
+        {
+            secondCircleColony = true;
+        }
+        AllowMovement();
+
+        if (moveLeft == 0)
+        {
+            ActivateCell(currentCell);
+        }
+
+    }
+    void ActivateCell(Cell cell)
+    {
+        currentCell.ActivateCell();
+    }
+
+    public int WhatIsDirection()
+    {
+        return currentCell.WhatIsRotation();
+
+    }
+
+    //проверяем есть ли какой-то начальный выбор или нет
+    public bool CheckStartingChoose()
+    {
+        return currentCell.CheckCellStartingChoose() ;
+    }
+
+    public void GoToCell(Cell targetCell)
+    {
+        GoToCellWithoutActivation(targetCell);
+        StartCoroutine(ActivateCellCoroutine(activateTime));
+    }
+
+    IEnumerator ActivateCellCoroutine(float activateTime)
+    {
+        yield return new WaitForSeconds(activateTime);
+        ActivateCell(currentCell);
+    }
+
+    public void GoToCellWithoutActivation(Cell targetCell)
+    {
+        currentCell = targetCell;
+        
+        if (playerColor == PlayerColors.RED)
+        {
+            startPosition = targetCell.redPosition.transform.position;
+            transform.position = startPosition;
+        }
+        if (playerColor == PlayerColors.BLUE)
+        {
+            startPosition = targetCell.bluePosition.transform.position;
+            transform.position = startPosition;
+        }
+        if (playerColor == PlayerColors.GREEN)
+        {
+            startPosition = targetCell.greenPosition.transform.position;
+            transform.position = startPosition;
+        }
+        if (playerColor == PlayerColors.YELLOW)
+        {
+            startPosition = targetCell.yellowPosition.transform.position;
+            transform.position = startPosition;
+        }
+    }
+
+    void EnoughMoneyToMove()
+    {
+        bool oldValue = enoughMoney;
+        enoughMoney = ((currentCell.cellWayTitle != "COLONIAL" && currentCell.cellWayTitle != "KLONDIKE" && player.cash >= 0)
+            || (player.cash + GameManager.Instance.colonyMovementCost)>=0);
+        negativeMoney = player.cash < 0;
+
+            onEnoughMoneyToMoveUpdate();
+        
+    }
+
 }

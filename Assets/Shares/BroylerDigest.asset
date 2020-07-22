@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96369920da44cec4eb1821240bb52734, type: 3}
+  m_Name: BroylerDigest
+  m_EditorClassIdentifier: 
+  shareTitle: "\u0413\u0430\u0437\u0435\u0442\u0430 \"\u0411\u0440\u043E\u0439\u043B\u0435\u0440
+    \u0414\u0430\u0439\u0434\u0436\u0435\u0441\u0442\""
+  shareDescription: "\u041F\u0440\u0438\u0431\u044B\u043B\u044C 10 000$"
+  icon: {fileID: -4111296284011133683, guid: d2a9c8d5bf614a343befa6864097ef88, type: 3}
+  typeOfShares: Media
+  cost: 30000
+  revenuePercent: 0
+  revenueFix: 10000
+  goldRevenueFix: 0
+  carsFromCapital: 0
+  colaFromCapital: 0

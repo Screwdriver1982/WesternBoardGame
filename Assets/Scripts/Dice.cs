@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Dice : MonoBehaviour
 {
+    public int diceLastThrow;
+    public Action onDiceStopped = delegate { };
+
     [SerializeField] Rigidbody rb;
     [SerializeField] Transform[] brinks;
     [SerializeField] Vector3 startTransform;
@@ -12,9 +16,11 @@ public class Dice : MonoBehaviour
     [SerializeField] float baseAngelMagnitude;
     [SerializeField] Vector3 startVelocity;
     [SerializeField] float stopFactor = 0.1f;
+    [SerializeField] float showResultTime = 2f;
 
 
     int throwResult = 0;
+
 
 
 
@@ -24,11 +30,11 @@ public class Dice : MonoBehaviour
     {
         rb.isKinematic = false;
         transform.position = startTransform;
-        startVelocity = new Vector3(Random.Range(-1f, 1f), Random.Range(-0.5f, 0.5f), Random.Range(-1f, 1f)).normalized * baseMagnitude;
-        startRotation = Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f));
+        startVelocity = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(-1f, 1f)).normalized * baseMagnitude;
+        startRotation = Quaternion.Euler(UnityEngine.Random.Range(0f, 360f), UnityEngine.Random.Range(0f, 360f), UnityEngine.Random.Range(0f, 360f));
         transform.rotation = startRotation;
         rb.velocity = startVelocity;
-        rb.angularVelocity = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * baseAngelMagnitude;
+        rb.angularVelocity = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized * baseAngelMagnitude;
     }
 
     private bool StopCheck()
@@ -59,10 +65,6 @@ public class Dice : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            ThrowDice();
-        }
 
         if (!rb.isKinematic)
         {
@@ -70,9 +72,18 @@ public class Dice : MonoBehaviour
             {
                 rb.velocity = Vector3.zero;
                 rb.isKinematic = true;
-                print(DiceStopBrink());
+                diceLastThrow = DiceStopBrink();
+                StartCoroutine(DiceStopped(showResultTime));
             }
         }
 
     }
+
+    IEnumerator DiceStopped(float showResultTime)
+    {
+        yield return new WaitForSeconds(showResultTime);
+        onDiceStopped();
+    }
+
+
 }

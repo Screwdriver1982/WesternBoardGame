@@ -95,10 +95,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerColor: 1
+  inGame: 1
   oneCellJumpTime: 0.5
   jumpPower: 3
   rotateTime: 0.5
+  activateTime: 1.2
   playerCamera: {fileID: 523123574810748280}
+  turnMiss: 0
   currentCell: {fileID: 0}
   playerTurn: 0
   startMoveOrPass: 1
@@ -117,18 +120,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f99c7b09bbdd641a4d73410a675722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerColor: {r: 0, g: 0, b: 0, a: 0}
   cash: 0
   gold: 0
   oil: 0
   cars: 0
   cola: 0
   drugs: 0
-  brains: 0
+  trinkets: 0
   capital: 0
   robberiedMoney: 0
   colonyMoney: 0
-  startingLoan: 0
   colonyLoan: 0
+  startingLoan: 0
+  brains: 000000000000000000000000
   policeCard: 0
   bossCard: 0
   armyCard: 0
@@ -137,9 +142,25 @@ MonoBehaviour:
   taxFreeCard: 0
   badHarvestCard: 0
   mediaCrisisCard: 0
-  loans: 
-  deposites: 
-  playerColor: {r: 0, g: 0, b: 0, a: 0}
+  revenueBlockCard: 0
+  loans: 0
+  loanOnThisRound: 0
+  loanPercents: 0
+  deposites: 0
+  depositePercents: 0
+  playerShares: []
+  laborIndex: 0
+  cashRevenue: 0
+  goldRevenue: 0
+  oilRevenue: 0
+  carsRevenue: 0
+  colaRevenue: 0
+  stockExchangeIndex: 0
+  depositeRevenue: 0
+  loanTax: 0
+  brainsGoldRevenue: 0
+  brainsConversion: 0
+  plantationRevenue: 0
 --- !u!1 &6663938436003449444
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +171,6 @@ GameObject:
   m_Component:
   - component: {fileID: 153208580944225362}
   - component: {fileID: 523123574810748280}
-  - component: {fileID: 2515555290350872142}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -215,11 +235,3 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &2515555290350872142
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6663938436003449444}
-  m_Enabled: 1
