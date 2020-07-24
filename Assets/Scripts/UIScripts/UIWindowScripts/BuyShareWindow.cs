@@ -62,10 +62,10 @@ public class BuyShareWindow : MonoBehaviour
         {
             activePlayer.WalletChange(-shareCost, 0, 0, 0, 0, 0, 0, 0);
             GameManager.Instance.GiveShareToPlayer(activePlayer, shareTmp);
-
+            GameManager.Instance.NextPlayerTurn();
+            UIManager.Instance.HideWindow(window);
         }
-        GameManager.Instance.NextPlayerTurn();
-        UIManager.Instance.HideWindow(window);
+        
     }
 
 

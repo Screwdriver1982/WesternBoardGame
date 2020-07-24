@@ -28,14 +28,17 @@ public class MissTurnWindow : MonoBehaviour
     int cashCost;
     int missTurn;
     int police;
+    int army;
     Cell prison;
+    Cell rescue;
 
 
 
-    public void OpenWindow(int cost, int miss, string missType, Cell prisonCell)
+    public void OpenWindow(int cost, int miss, string missType, Cell prisonCell, Cell rescueCell)
     {
         activePlayerMvmnt = GameManager.Instance.WhoIsPlayerMVMNT();
         activePlayer = GameManager.Instance.WhoIsPlayer();
+        rescue = rescueCell;
 
         if (missType == "gold") //т.е. откупаться золотом нужно
         {
@@ -44,6 +47,7 @@ public class MissTurnWindow : MonoBehaviour
             cashCost = 0;
             missTurn = miss;
             police = 0;
+            army = 0;
             prison = prisonCell;
 
             costText.text = "" + cost;
@@ -61,6 +65,24 @@ public class MissTurnWindow : MonoBehaviour
             cashCost = 0;
             missTurn = 0;
             police = -1;
+            army = 0;
+            costText.gameObject.SetActive(false);
+            goldImage.SetActive(false);
+            payButton.SetActive(false);
+            missText.gameObject.SetActive(false);
+            missButton.SetActive(false);
+            goodButton.SetActive(true);
+            goodButtonText.text = "Копы свои!";
+
+        }
+        else if (missType == "army save") //армия  спасла
+        {
+
+            goldCost = 0;
+            cashCost = 0;
+            missTurn = 0;
+            police = 0;
+            army = -1;
             costText.gameObject.SetActive(false);
             goldImage.SetActive(false);
             payButton.SetActive(false);
@@ -76,6 +98,7 @@ public class MissTurnWindow : MonoBehaviour
             cashCost = 0;
             missTurn = 0;
             police = 0;
+            army = 0;
             costText.gameObject.SetActive(false);
             goldImage.SetActive(false);
             payButton.SetActive(false);
@@ -92,6 +115,7 @@ public class MissTurnWindow : MonoBehaviour
             cashCost = 0;
             missTurn = miss;
             police = 0;
+            army = 0;
             prison = prisonCell;
 
 
@@ -113,6 +137,7 @@ public class MissTurnWindow : MonoBehaviour
             cashCost = cost;
             missTurn = miss;
             police = 0;
+            army = 0;
             prison = prisonCell;
 
 
@@ -133,6 +158,7 @@ public class MissTurnWindow : MonoBehaviour
             cashCost = cost;
             missTurn = miss;
             police = 0;
+            army = 0;
             prison = prisonCell;
 
 
@@ -153,10 +179,9 @@ public class MissTurnWindow : MonoBehaviour
         
        
         activePlayerMvmnt.turnMiss = missTurn;
-        if (missTurn != 0)
+        if (missTurn != 0 && prison !=null)
         {
-
-            activePlayerMvmnt.GoToCellWithoutActivation(prison);
+            activePlayerMvmnt.JumpToCellAndActivateIt(prison);
         }
         GameManager.Instance.NextPlayerTurn();
         UIManager.Instance.HideWindow(window);
@@ -168,7 +193,12 @@ public class MissTurnWindow : MonoBehaviour
         if ((activePlayer.cash + cashCost >= 0) && (activePlayer.gold + goldCost >= 0))
         {
             GameManager.Instance.ChangePlayerWallet(cashCost, goldCost, 0, 0, 0, 0, cashCost,0);
-            GameManager.Instance.NextPlayerTurn();
+
+            if (rescue != null)
+            { 
+                activePlayerMvmnt.JumpToCellAndActivateIt(rescue);
+            }
+            
             UIManager.Instance.HideWindow(window);
 
         }
@@ -177,7 +207,7 @@ public class MissTurnWindow : MonoBehaviour
     public void GoodButton()
     {
 
-        GameManager.Instance.ChangePlayerCards(0, police, 0, 0, 0, 0, 0, 0,0);
+        GameManager.Instance.ChangePlayerCards(0, police, army, 0, 0, 0, 0, 0,0);
         GameManager.Instance.NextPlayerTurn();
         UIManager.Instance.HideWindow(window);
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class MissTurnCell : Cell
@@ -12,6 +11,7 @@ public class MissTurnCell : Cell
     [SerializeField] int missTurn; //количество ходов пропуска
     [SerializeField] int drugCoef; //во сколько раз больше пропускаешь ходов если везешь наркотики
     [SerializeField] Cell prisonCell; //клетка, где отдыхаешь =)
+    [SerializeField] Cell rescueCell; // клетка, куда попадают откупившись
     Player activePlayer;
 
     public override void ActivateCell()
@@ -23,7 +23,7 @@ public class MissTurnCell : Cell
             finalMissTurn *= drugCoef;
         }
 
-        if (goldCost < 0)
+        if (goldCost < 0 && !activePlayer.armyCard)
         {
             UIManager.Instance.ShowMissTurnWindow(cellIcon,
                                                 cellTitle,
@@ -32,6 +32,20 @@ public class MissTurnCell : Cell
                                                 goldCost,
                                                 finalMissTurn,
                                                 "gold",
+                                                prisonCell,
+                                                rescueCell);
+
+        }
+        else if (goldCost < 0 && activePlayer.armyCard)
+        {
+            UIManager.Instance.ShowMissTurnWindow(cellIcon,
+                                                cellTitle,
+                                                cellDescription,
+                                                cellWayTitle,
+                                                goldCost,
+                                                finalMissTurn,
+                                                "army save",
+                                                this,
                                                 this);
 
         }
@@ -44,6 +58,7 @@ public class MissTurnCell : Cell
                                     0,
                                     0,
                                     "save",
+                                    this,
                                     this);
 
         }
@@ -56,7 +71,8 @@ public class MissTurnCell : Cell
                                     0,
                                     0,
                                     "boss",
-                                    this);
+                                    prisonCell,
+                                    rescueCell);
         }
         else if ((!doesPoliceSave || doesPoliceSave && !activePlayer.policeCard) && !confiscation)
         {
@@ -67,7 +83,8 @@ public class MissTurnCell : Cell
                                     0,
                                     finalMissTurn,
                                     "miss",
-                                    prisonCell);
+                                    prisonCell,
+                                    rescueCell);
 
         }
         else if ((!doesPoliceSave || doesPoliceSave && !activePlayer.policeCard) && confiscation)
@@ -79,7 +96,8 @@ public class MissTurnCell : Cell
                         -activePlayer.robberiedMoney,
                         finalMissTurn,
                         "miss or robbery",
-                        prisonCell);
+                        prisonCell,
+                        rescueCell);
 
         }
         else if (doesBossSave && !activePlayer.bossCard)
@@ -91,7 +109,8 @@ public class MissTurnCell : Cell
                         -activePlayer.robberiedMoney,
                         finalMissTurn,
                         "toBoss",
-                        prisonCell);
+                        prisonCell,
+                        rescueCell);
         }
     }
 }

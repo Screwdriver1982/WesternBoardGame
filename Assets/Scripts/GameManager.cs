@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public float baseDepositePercents = 0.25f;
     public int colonyMovementCost = -200;
     public Cell slavaryMarket; //клетка, куда отправляешься из колоний, если кончились деньги на движение
+    public float casinoRewardCoef; // коэффициент казино
 
     [Header("Фондовая Биржа")]
     [SerializeField] Shares[] tradableShares;
@@ -78,6 +79,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Правильный порядок клеток, для кнопки Рэмбо")]
     [SerializeField] Cell[] cellOrderFromRamboCell;
+
+    [Header("Игровое поле")]
+    public Cell[] cellsNumber; //клетки в правильном порядке, чтобы правильно перелетать
 
 
 
@@ -471,6 +475,7 @@ public class GameManager : MonoBehaviour
             Transform activeCameraTransform = activeCamera.transform;
             activeCamera.gameObject.SetActive(false);
             freeCamera.gameObject.SetActive(true);
+            activeCamera = freeCamera.cameraMain;
             freeCamera.FreeCameraMoveTo(activeCameraTransform, playerMovements[activePlayerNum].WhatIsDirection());
         }
     }
@@ -484,7 +489,15 @@ public class GameManager : MonoBehaviour
 
     public void NextPlayerTurn()
     {
-        NextPlayer();
+        PlayerMovement playerMvmnt = WhoIsPlayerMVMNT();
+        if (playerMvmnt.extraTurnNumber > 0)
+        {
+            playerMvmnt.extraTurnNumber -= 1;
+        }
+        else
+        { 
+            NextPlayer();
+        }
         StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
 
 
@@ -706,6 +719,17 @@ public class GameManager : MonoBehaviour
                 dice.enabled = false;
                 playerMovements[activePlayerNum].GiveTheTurnToPlayer(dice.diceLastThrow);
                 ChangeGMState(GameStates.TURN_CAP_MOVING_WAITING);
+                break;
+
+            case GameStates.TURN_CAP_MOVING_WAITING:
+                diceRolling = false;
+                dice.enabled = false;
+                if (dice.diceLastThrow == 6)
+                {
+                    Player player = WhoIsPlayer();
+                    player.WalletChange(player.casinoPossibleReward, 0, 0, 0, 0, 0, 0, 0);
+                }
+                NextPlayerTurn();
                 break;
         }
     }

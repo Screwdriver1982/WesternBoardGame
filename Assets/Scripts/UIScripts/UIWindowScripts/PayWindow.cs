@@ -56,6 +56,7 @@ public class PayWindow : MonoBehaviour
             int police, int army, int woolfy, int rabby, int taxFree, int badHarvest, int mediaCrisis,
                             Cell cellToMoveWithAction, Cell cellToMoveWithoutAction, int revenueBlock)
     {
+        print("payCashSum " + payCashSum);
         activePlayer = GameManager.Instance.WhoIsPlayer();
         payCashSum = cashAdd;
         payGoldSum = goldAdd;
@@ -92,6 +93,9 @@ public class PayWindow : MonoBehaviour
 
 
         payCashTxt.gameObject.SetActive(payCashSum != 0);
+
+        print("payCashSum " + (payCashSum != 0));
+
         gold.SetActive(payGoldSum != 0);
         oil.SetActive(payOilSum != 0);
         cars.SetActive(payCarsSum != 0);
@@ -214,7 +218,7 @@ public class PayWindow : MonoBehaviour
         }
         else if (cellToMoveWithActionW != null)
         {
-            GameManager.Instance.WhoIsPlayerMVMNT().GoToCell(cellToMoveWithActionW);
+            GameManager.Instance.WhoIsPlayerMVMNT().JumpToCellAndActivateIt(cellToMoveWithActionW);
             UIManager.Instance.HideWindow(window);
 
         }

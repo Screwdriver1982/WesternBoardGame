@@ -77,10 +77,11 @@ public class UIActivePlayer : MonoBehaviour
         //drugs.SetActive(player.drugs > 0);
         drugsText.text = "" + player.drugs;
 
-        robberyText.gameObject.SetActive(player.robberiedMoney > 0);
+        string way = GameManager.Instance.WhoIsPlayerMVMNT().currentCell.cellWayTitle;
+        robberyText.gameObject.SetActive(player.robberiedMoney > 0 && way == "CRIMINAL");
         robberyText.text = "Награблено: " + player.robberiedMoney;
 
-        colonyText.gameObject.SetActive(player.colonyMoney > 0);
+        colonyText.gameObject.SetActive(player.colonyMoney > 0 && (way == "COLONIAL" || way == "KLONDIKE"));
         colonyText.text = "Колонии & Клондайк: " + player.colonyMoney;
     }
      

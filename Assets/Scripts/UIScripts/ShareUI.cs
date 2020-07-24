@@ -15,6 +15,7 @@ public class ShareUI : MonoBehaviour
 
     public void Initialize(Shares shareInit, float coefInit)
     {
+
         share = shareInit;
         shareImage.sprite = share.icon;
         shareTitle.text = share.shareTitle;

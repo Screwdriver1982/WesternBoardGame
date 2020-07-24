@@ -64,7 +64,8 @@ public class PaySmthCell : Cell
         WOOLFY, //попали на клетку с Вулфи
         RABBY, // попал на клетку с рэбби
         SHOOTING, // попал в перестрелку
-        STARVATION // голод в колонии
+        STARVATION, // голод в колонии
+        COLONIAL_RIVAL //восстание в колонии
     }
 
 
@@ -301,6 +302,21 @@ public class PaySmthCell : Cell
                 }
 
                 
+                break;
+
+            case CellPayType.COLONIAL_RIVAL:
+                if (activePlayer.armyCard)
+                {
+                    cellToMoveWithActionTemp = null;
+                }
+                else if (activePlayer.colonyMoney > 0)
+                {
+                    print("cashAddTemp "+cashAddTemp);
+                    cashAddTemp = -activePlayer.colonyMoney;
+                    print("cashAddTemp " + cashAddTemp);
+                }
+                beneficiar = null;
+                beneficiarFreeCash = 0;
                 break;
 
         }

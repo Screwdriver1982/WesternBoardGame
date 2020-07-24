@@ -1353,6 +1353,7 @@ MonoBehaviour:
   payDrugsTxt: {fileID: 2030013886173408914}
   drugs: {fileID: 4667331215882872415}
   bossTaxTxt: {fileID: 4905458590607083558}
+  bankTaxTxt: {fileID: 372790654837719090}
   window: {fileID: 5613257578193929328}
 --- !u!1 &6858007945491354816
 GameObject:

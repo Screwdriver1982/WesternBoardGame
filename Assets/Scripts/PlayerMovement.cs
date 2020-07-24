@@ -12,8 +12,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] PlayerColors playerColor;
     [SerializeField] Player player;
 
-    [Header("В игре?")]
+    [Header("В игре и может ходить?")]
     public bool inGame = true;
+    public bool enoughMoney = true;
+    public bool negativeMoney = false;
 
     [Header("Перемещение между клетками")]
     [SerializeField] float oneCellJumpTime;
@@ -21,29 +23,33 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float rotateTime = 1f;
     [SerializeField] float activateTime = 1.2f;
 
+    [Header("Камера игрока")]
     public Camera playerCamera;
-    public int turnMiss;
-    public bool toColony = false;
-    public bool secondCircleColony = false;
 
+    [Header("Ходы и движения")]
+    public int moveLeft = 6; //осталось движений в этом ходу
+    public int turnMiss; // ходы которые нужно пропустить
+    public int extraTurnNumber = 0; //доп.ходы
 
-
-
-
-    public Cell currentCell;
-
-
+    [Header("Параметры текущего перемещения")]
     [SerializeField] bool playerTurn = true;
     [SerializeField] bool startMoveOrPass = true;
-    public int moveLeft = 6;
     [SerializeField] bool allowMovement;
     [SerializeField] bool dialogIsOpen = false;
-    public bool enoughMoney = true;
-    public bool negativeMoney = false;
 
+    [Header("Флаги альтернативного движения")]
+    public bool toColony = false; //альтернативный путь в колонии, отключается, если такой же флаг у клетки отсутствует
+    public bool secondCircleColony = false; //счетчик кругов, есть клетка активатор, есть клетка, которая дает альтерн.путь если включен
+    public bool reversMovement; //при начале следующего хода игрока сбросится в False, пока действует позволяет пользоваться альт.путем назад
 
+    [Header("Клетка")]
+    public Cell currentCell;
 
     Vector3 startPosition;
+
+
+
+
 
     enum PlayerColors
     {
@@ -67,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
         {
             GameManager.Instance.SwitchCameraToPlayer(this);
 
-            if ((toColony|| secondCircleColony) && currentCell.alternativeWay)
+            if ((toColony || secondCircleColony || reversMovement) && currentCell.alternativeWay)
             {
                 if (startMoveOrPass && currentCell.startMovingUpA != null)
                 {
@@ -132,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
         {
             GameManager.Instance.SwitchCameraToPlayer(this);
 
-            if ((toColony || secondCircleColony) && currentCell.alternativeWay)
+            if ((toColony || secondCircleColony || reversMovement) && currentCell.alternativeWay)
             {
                 if (startMoveOrPass && currentCell.startMovingDownA != null)
                 {
@@ -194,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.LeftArrow) && playerTurn && !dialogIsOpen && allowMovement && moveLeft > 0 && enoughMoney)
         {
             GameManager.Instance.SwitchCameraToPlayer(this);
-            if ((toColony || secondCircleColony) && currentCell.alternativeWay)
+            if ((toColony || secondCircleColony || reversMovement) && currentCell.alternativeWay)
             {
                 if (startMoveOrPass && currentCell.startMovingLeftA != null)
                 {
@@ -257,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
         {
             GameManager.Instance.SwitchCameraToPlayer(this);
 
-            if ((toColony || secondCircleColony) && currentCell.alternativeWay)
+            if ((toColony || secondCircleColony || reversMovement) && currentCell.alternativeWay)
             {
                 if (startMoveOrPass && currentCell.startMovingRightA != null)
                 {
@@ -437,6 +443,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (moveLeft == 0)
         {
+            reversMovement = false;
             ActivateCell(currentCell);
         }
 

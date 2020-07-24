@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
+using DG.Tweening;
 
 public class FreeCamera : MonoBehaviour
 {
+    public Camera cameraMain;
     [SerializeField]float cameraSpeed = 100;
-    [SerializeField] int cellView;
+    [SerializeField] int cameraView;
+    [SerializeField] float rotateTime = 0.1f;
+    bool allowRotate = true;
 
     // Start is called before the first frame update
     void Start()
@@ -23,24 +26,24 @@ public class FreeCamera : MonoBehaviour
         {
            
 
-            if (cellView == 0)
+            if (cameraView == 0)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, 1);
+                Vector3 direction = new Vector3(0, 0, 1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 1)
+            else if (cameraView == 1)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(-1, 0, 0);
+                Vector3 direction = new Vector3(-1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 2)
+            else if (cameraView == 2)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(1, 0, 0);
+                Vector3 direction = new Vector3(0, 0, -1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 3)
+            else if (cameraView == 3)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, -1);
+                Vector3 direction = new Vector3(1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
 
@@ -49,82 +52,106 @@ public class FreeCamera : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            if (cellView == 0)
+            if (cameraView == 0)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, -1);
+                Vector3 direction = new Vector3(0, 0, -1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 1)
+            else if (cameraView == 1)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(1, 0, 0);
+                Vector3 direction = new Vector3(1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 2)
+            else if (cameraView == 2)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(-1, 0, 0);
+                Vector3 direction = new Vector3(0, 0, 1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 3)
+            else if (cameraView == 3)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, 1);
+                Vector3 direction = new Vector3(-1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            if (cellView == 0)
+            if (cameraView == 0)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(1, 0, 0);
+                Vector3 direction = new Vector3(1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 1)
+            else if (cameraView == 1)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, 1);
+                Vector3 direction = new Vector3(0, 0, 1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 2)
+            else if (cameraView == 2)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, -1);
+                Vector3 direction = new Vector3(-1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 3)
+            else if (cameraView == 3)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(-1, 0, 0);
+                Vector3 direction = new Vector3(0, 0, -1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            if (cellView == 0)
+            if (cameraView == 0)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(-1, 0, 0);
+                Vector3 direction = new Vector3(-1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 1)
+            else if (cameraView == 1)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, -1);
+                Vector3 direction = new Vector3(0, 0, -1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 2)
+            else if (cameraView == 2)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(0, 0, 1);
+                Vector3 direction = new Vector3(1, 0, 0);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
-            else if (cellView == 3)
+            else if (cameraView == 3)
             {
-                UnityEngine.Vector3 direction = new UnityEngine.Vector3(1, 0, 0);
+                Vector3 direction = new Vector3(0, 0, 1);
                 transform.position += cameraSpeed * Time.deltaTime * direction;
             }
         }
+
+        if ((Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0)) && allowRotate)
+        {
+            RotateCamera();
+        }
+
+
 
     }
 
     public void FreeCameraMoveTo(Transform newTransform, int view)
     {
-        UnityEngine.Vector3 newPosition = newTransform.position;
+        Vector3 newPosition = new Vector3(newTransform.position.x, 18f, newTransform.position.z);
         transform.position = newPosition;
-        UnityEngine.Quaternion newRotation = newTransform.rotation;
+        Quaternion newRotation = newTransform.rotation;
         transform.rotation = newRotation;
-        cellView = view;
+        cameraView = view;
     }
+
+    void RotateCamera()
+    {
+        Vector3 currentEulerAngles = transform.eulerAngles;
+        Vector3 newEulerAngles = currentEulerAngles + new Vector3(0, -90f, 0);
+        //transform.eulerAngles = currentEulerAngles;
+        allowRotate = false;
+        cameraView = (cameraView + 1) % 4;
+        transform.DORotate(newEulerAngles, rotateTime).SetEase(Ease.InOutSine).OnComplete(AllowRotate);
+
+    }
+
+    void AllowRotate()
+    {
+        allowRotate = true;
+    }
+
 }

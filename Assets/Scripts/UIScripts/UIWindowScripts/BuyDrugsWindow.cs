@@ -7,13 +7,15 @@ public class BuyDrugsWindow : MonoBehaviour
 {
     [SerializeField] CanvasGroup window;
 
-    [SerializeField] int cost; // цена за 1 штуку
+    [SerializeField] int cost; // цена за 1 штуку, для колониального кредита должна быть отрицательной
     [SerializeField] int maxNumbers = 10; // максимальное количество для покупки
     int currentNumber; //сколько есть на старте у игрока
     int afterDealNum; //сколько будет после сделки
     int dealCash; //сколько в итоге заработал с продажи
     int robbery;
     int colony;
+    int getLoan = 0;
+    int bet = 0;
 
     [SerializeField] Text afterDealNumTxt; //показывает, сколько в итоге останется товара
     [SerializeField] Text dealCashTxt; // показывает, сколько заработает или потратит в результате сделки
@@ -26,13 +28,15 @@ public class BuyDrugsWindow : MonoBehaviour
 
     public void OpenWindow(int drugsCost, int drugsMaxNumber, string goodsType, string wayType)
     {
+        dealCash = 0;
         maxNumbers = drugsMaxNumber;
         cost = drugsCost;
         goodsTypeW = goodsType; //Drugs or Trinkets
         wayTypeW = wayType; //Colony or Other
         colony = 0;
         robbery = 0;
-
+        bet = 0;
+        
 
         player = GameManager.Instance.WhoIsPlayer();
 
@@ -41,7 +45,7 @@ public class BuyDrugsWindow : MonoBehaviour
             currentNumber = player.drugs;
 
         }
-        else
+        else if (goodsTypeW == "Trinkets")
         {
             currentNumber = player.trinkets;
             if (wayTypeW == "Other")
@@ -53,9 +57,22 @@ public class BuyDrugsWindow : MonoBehaviour
                 slider.minValue = 0;
             }
         }
+        else if (goodsTypeW == "Colonial Bank")
+        {
+            currentNumber = player.colonyLoan;
+            slider.minValue = player.colonyLoan;
+            slider.maxValue = currentNumber + maxNumbers;
 
 
-        slider.maxValue = currentNumber + maxNumbers;
+        }
+        else if (goodsTypeW == "Casino")
+        {
+            currentNumber = 0;
+            slider.minValue = 0;
+            slider.maxValue = maxNumbers;
+        }
+
+
         slider.value = currentNumber;
         afterDealNum = currentNumber;
         afterDealNumTxt.text = "" + afterDealNum;
@@ -85,9 +102,13 @@ public class BuyDrugsWindow : MonoBehaviour
             {
                 robbery = dealCash;
             }
-            else
+            else if (goodsTypeW == "Trinkets")
             {
                 colony = dealCash;
+            }
+            else if (goodsTypeW == "Colonial Bank")
+            {
+                getLoan = dealCash;
             }
 
         }
@@ -102,6 +123,11 @@ public class BuyDrugsWindow : MonoBehaviour
 
             dealCashTxt.text = dealCash + "$";
             dealCashTxt.color = Color.red;
+            if (goodsTypeW == "Casino")
+            {
+                bet = -Mathf.FloorToInt(dealCash * GameManager.Instance.casinoRewardCoef);
+            }
+
         }
     }
 
@@ -110,11 +136,24 @@ public class BuyDrugsWindow : MonoBehaviour
         if (dealCash + player.cash >= 0)
         {
             GameManager.Instance.ChangePlayerWallet(dealCash, 0, 0, 0, afterDealNum - currentNumber, 0, robbery, colony);
-            dealCash = 0;
-            currentNumber = afterDealNum;
-            ChangeDealCashTxt();
-            GameManager.Instance.NextPlayerTurn();
-            UIManager.Instance.HideWindow(window);
+            if (getLoan > 0)
+            {
+                player.colonyLoan += getLoan;
+            }
+
+            if (bet <= 0)
+            {
+                GameManager.Instance.NextPlayerTurn();
+                UIManager.Instance.HideWindow(window);
+
+            }
+            else
+            {
+                player.casinoPossibleReward = bet;
+                GameManager.Instance.ThrowDice();
+                UIManager.Instance.HideWindow(window);
+            }
+
         }
     }
 

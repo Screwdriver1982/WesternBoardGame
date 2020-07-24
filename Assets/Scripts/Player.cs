@@ -61,7 +61,11 @@ public class Player : MonoBehaviour
     public int oilRevenue;
     public int carsRevenue;
     public int colaRevenue;
-    
+
+    [Header("Казино")]
+    public int casinoPossibleReward; //последняя сумма, которую игрок мог выиграть в казино
+
+
     //изменяется или нет индекс
     public int stockExchangeIndex;
     

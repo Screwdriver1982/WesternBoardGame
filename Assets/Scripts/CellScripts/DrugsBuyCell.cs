@@ -6,7 +6,7 @@ public class DrugsBuyCell : Cell
 {
     [SerializeField] int cost;
     [SerializeField] int maxNumber;
-    [Tooltip("Drugs or Trinkets")][SerializeField] string goodsType;
+    [Tooltip("Drugs, Trinkets, Colonial Bank, Casino")][SerializeField] string goodsType;
     [Tooltip("Colony or Other")][SerializeField] string wayType;
     public override void ActivateCell()
     {

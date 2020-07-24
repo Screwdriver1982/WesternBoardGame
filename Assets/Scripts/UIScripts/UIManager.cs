@@ -28,15 +28,19 @@ public class UIManager : MonoBehaviour
 
     [Header("Появление окон")]
     [SerializeField] float fadeDuration;
+    public float timeToDrawShare = 0.1f; //задержка при отрисовке акций в окне списка акций игрока
     [SerializeField] UIActivePlayer activePlayerUI;
     [SerializeField] UINotActivePlayer secondPlayerUI;
     [SerializeField] UINotActivePlayer thirdPlayerUI;
     [SerializeField] UINotActivePlayer fourthPlayerUI;
 
+
+
     [Header("Различные желтые панели")]
     [SerializeField] GameObject yellowPanel;
     [SerializeField] GameObject throwDicePanel;
     [SerializeField] GameObject moveArrowsPanel;
+    [SerializeField] GameObject planePanel;
 
     GameObject activeYellowPanel;
 
@@ -61,10 +65,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] CanvasGroup cultregerWindow; //окно с выбором в колонии идти или нет
     [SerializeField] GameObject movieWindow; //окно с предложением постоять и получить немного денег
     [SerializeField] GameObject smbMissTurnWindow; //окно, в котором показывается, что какой-то игрок пропускает ходы
+    [SerializeField] GameObject tourBureauWindow; //окно, в котором предлагается отправиться в колонии
+    [SerializeField] GameObject extraTurnWindow; // окно с доп.ходом
+    [SerializeField] GameObject riffWindow;//окно, где игрок попадает на рифф и теряет безделушки
+    [SerializeField] GameObject chanceWindow; //окно Шанса, движение назад
 
 
 
     bool isDialogOpen = false;
+
+
 
     public void ShowWindow(CanvasGroup window)
     {
@@ -120,6 +130,19 @@ public class UIManager : MonoBehaviour
         moveArrowsPanel.SetActive(true);
         activeYellowPanel = moveArrowsPanel;
         moveArrowsPanel.GetComponent<UIMovementLeft>().LinkToPlayerMovement();
+    }
+
+    public void ShowPlanePanel()
+    {
+        if (activeYellowPanel != null)
+        {
+            activeYellowPanel.SetActive(false);
+        }
+        yellowPanel.SetActive(true);
+        planePanel.SetActive(true);
+        activeYellowPanel = planePanel;
+
+
     }
 
     public void HideYellowPanel()
@@ -264,11 +287,12 @@ public class UIManager : MonoBehaviour
                                      int cost, 
                                      int miss, 
                                      string missType, 
-                                     Cell prisonCell)
+                                     Cell prisonCell,
+                                     Cell rescueCell)
     {
         ChangeContentDescriptionAndShowWindow(missTurnWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
         MissTurnWindow missTurnW = missTurnWindow.GetComponent<MissTurnWindow>();
-        missTurnW.OpenWindow(cost, miss, missType, prisonCell);
+        missTurnW.OpenWindow(cost, miss, missType, prisonCell, rescueCell);
 
     }
 
@@ -312,9 +336,12 @@ public class UIManager : MonoBehaviour
     {
         playerSharesWindow.SetActive(true);
         PlayerSharesWindow playerSharesW = playerSharesWindow.GetComponent<PlayerSharesWindow>();
-        playerSharesW.OpenWindow(GameManager.Instance.WhoIsPlayer());
+        Player player = GameManager.Instance.WhoIsPlayer();
+        playerSharesW.OpenWindow(player);
         ShowWindow(playerSharesWindow.GetComponent<CanvasGroup>());
     }
+
+
 
     public void ShowBankWindow()
     {
@@ -411,4 +438,46 @@ public class UIManager : MonoBehaviour
         SmbMissTurnWindow smbMissTurnW = smbMissTurnWindow.GetComponent<SmbMissTurnWindow>();
         smbMissTurnW.OpenWindow(missPlayer, missTurn);
     }
+
+    public void ShowTourBureauWindow(Sprite cellIcon,
+                               string cellTitle,
+                               string cellDescription,
+                               string cellWayTitle)
+    {
+        ChangeContentDescriptionAndShowWindow(tourBureauWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
+        
+
+    }
+
+    public void ShowExtraTurnWindow(Sprite cellIcon,
+                               string cellTitle,
+                               string cellDescription,
+                               string cellWayTitle)
+    {
+        ChangeContentDescriptionAndShowWindow(extraTurnWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
+
+
+    }
+
+    public void ShowRiffWindow(Sprite cellIcon,
+                           string cellTitle,
+                           string cellDescription,
+                           string cellWayTitle)
+    {
+        ChangeContentDescriptionAndShowWindow(riffWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
+
+
+    }
+
+    public void ShowChanceWindow(Sprite cellIcon,
+                           string cellTitle,
+                           string cellDescription,
+                           string cellWayTitle)
+    {
+        ChangeContentDescriptionAndShowWindow(chanceWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
+
+
+    }
+
+
 }

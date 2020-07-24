@@ -7,11 +7,16 @@ public class PlayerSharesWindow : MonoBehaviour
     [SerializeField] GameObject shareUIArea;
     [SerializeField] RectTransform content;
     [SerializeField] CanvasGroup window;
-    ShareUI shareUI;
+    [SerializeField] Player player;
+    
+    bool firstOpen = true;
+
+
 
     // Start is called before the first frame update
     public void OpenWindow(Player playerInit)
     {
+        player = playerInit;
         //чистим акции, которые были
         foreach (Transform child in content)
         {
@@ -19,20 +24,45 @@ public class PlayerSharesWindow : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        //рисуем акции игрока
-        foreach (Shares share in playerInit.playerShares)
+
+        DrawShares();
+        foreach (Transform child in content)
         {
-            GameObject newShareUI = Instantiate(shareUIArea);
-            print("Create " + newShareUI);
-            newShareUI.transform.SetParent(content, false);
-            shareUI = shareUIArea.GetComponent<ShareUI>();
-            shareUI.Initialize(share, 1f);
+            print("Destroy " + child);
+            Destroy(child.gameObject);
         }
+        DrawShares();
+
+        //StartCoroutine(DrawSharesCoroutine(UIManager.Instance.timeToDrawShare));
+
+    }
+
+    IEnumerator DrawSharesCoroutine(float timeToDraw)
+    {
+        yield return new WaitForSeconds(timeToDraw);
+        DrawShares();
     }
 
     public void OkButton()
     {
+        foreach (Transform child in content)
+        {
+            print("Destroy " + child);
+            Destroy(child.gameObject);
+        }
         UIManager.Instance.HideWindow(window);
+    }
+    void DrawShares()
+    {
+        for (int i = 0; i < player.playerShares.Count; i++)
+        {
+            GameObject newShareUI = Instantiate(shareUIArea);
+            print("Create " + newShareUI);
+            newShareUI.transform.SetParent(content, false);
+            ShareUI shareUI = shareUIArea.GetComponent<ShareUI>();
+            shareUI.Initialize(player.playerShares[i], 1f);
+        }
+
     }
 
 }
