@@ -53,13 +53,13 @@ public class GameManager : MonoBehaviour
     [Header("Фондовая Биржа")]
     [SerializeField] Shares[] tradableShares;
     public Action onCorpCostChanges = delegate { };
-    [SerializeField] int[] sharesCost;
+    public int[] corpCosts;
     [SerializeField] int[] corpGoodsNumber;
 
     [Header("Товарная биржа")]
     [SerializeField] string[] goodsNames = { "gold", "oil", "cars", "cola" };
-    [SerializeField] int[] goodsCost = { 100, 1000, 1000, 200 };
-    [SerializeField] int[] goodsPointCost = { 50, 250, 250, 50 };
+    public int[] goodsCost = { 100, 1000, 1000, 200 };
+    public int[] goodsPointCost = { 50, 250, 250, 50 };
 
     [Header("Генераторы товаров")] // должны соответствовать по номерам товарам на товарной бирже, дублируют корпорации, но уж что поделать
     [SerializeField] Shares[] goodsGenerators;
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
         ChangeGMState(GameStates.TURN_DICE_THROW_WAITING); //нужно будет поменять потом на Старт дайс
         for (int i = 0; i < tradableShares.Length; i++)
         {
-            sharesCost[i] = tradableShares[i].cost;
+            corpCosts[i] = tradableShares[i].cost;
 
         }
         onCorpCostChanges();
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
-        return sharesCost[corporationIndex];
+        return corpCosts[corporationIndex];
     }
 
     //устанавливает стоимость корпорации
@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
         {
             if (corporation = tradableShares[i])
             {
-                sharesCost[i] = Mathf.Clamp(sharesCost[i] + costChanges,
+                corpCosts[i] = Mathf.Clamp(corpCosts[i] + costChanges,
                                             Mathf.FloorToInt(corporation.cost * 0.1f),
                                             corporation.cost * 2
                                             );

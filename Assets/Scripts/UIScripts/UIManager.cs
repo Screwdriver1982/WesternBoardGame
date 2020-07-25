@@ -70,6 +70,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject riffWindow;//окно, где игрок попадает на рифф и теряет безделушки
     [SerializeField] GameObject chanceWindow; //окно Шанса, движение назад
     [SerializeField] GameObject auctionWindow;//окно аукциона
+    [SerializeField] GameObject stockExchangeWindow;//окно с информацией о цене корпораций и товаров
 
 
 
@@ -497,4 +498,12 @@ public class UIManager : MonoBehaviour
         auctionW.OpenWindow(share, secondPlayerNum, thirdPlayerNum, fourthPlayerNum);
         //auctionW.OpenWindow(toAuction, 1, 2, 3);
     }
+
+    public void ShowStockExchangeWindow()
+    {
+        ShowWindowWithoutDescription(stockExchangeWindow);
+        StockExchangeWindow stockExchangeW = stockExchangeWindow.GetComponent<StockExchangeWindow>();
+        stockExchangeW.OpenWindow();
+    }
+
 }
