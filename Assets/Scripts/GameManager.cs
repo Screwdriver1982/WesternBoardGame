@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+//using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class GameManager : MonoBehaviour
 {
@@ -83,8 +85,7 @@ public class GameManager : MonoBehaviour
     [Header("Игровое поле")]
     public Cell[] cellsNumber; //клетки в правильном порядке, чтобы правильно перелетать
 
-
-
+    [SerializeField] int[] unsoldShares;
 
 
 
@@ -262,6 +263,44 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+
+
+
+    public Shares GetRandomUnsoldShare()
+    {
+
+        float maxWeight = 0f;
+        int maxWeightNumber = -1;
+        for (int i = 0; i < allShares.Length; i++)
+        {
+            if (shareOwner[i] == null)
+            {
+                float weight = UnityEngine.Random.value;
+                print("вес " + i + " : " + weight);
+                if (weight > maxWeight)
+                {
+                    print("new max weight ");
+                    maxWeight = weight;
+                    maxWeightNumber = i;
+                }
+            }
+        }
+
+        if (maxWeightNumber != -1)
+        {
+            print("max weight number = " + maxWeightNumber);
+            return allShares[maxWeightNumber];
+        }
+        else
+        {
+            return null;
+        }
+
+
+
+
     }
 
     //функция возвращает ответ, есть ли у игрока с таким номером генератор товаров: прииск, бампер и т.п.

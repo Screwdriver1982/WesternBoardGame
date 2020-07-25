@@ -69,6 +69,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject extraTurnWindow; // окно с доп.ходом
     [SerializeField] GameObject riffWindow;//окно, где игрок попадает на рифф и теряет безделушки
     [SerializeField] GameObject chanceWindow; //окно Шанса, движение назад
+    [SerializeField] GameObject auctionWindow;//окно аукциона
 
 
 
@@ -164,6 +165,8 @@ public class UIManager : MonoBehaviour
     }
 
 
+
+
     public void ShowDescriptionWindow(Sprite cellIcon, string cellTitle, string cellDescription, string cellWayTitle)
     {
         descriptionWindow.SetActive(true);
@@ -171,6 +174,13 @@ public class UIManager : MonoBehaviour
         description.ChangeDescriptionWindow(cellIcon, cellTitle, cellDescription, cellWayTitle);
         CanvasGroup descrWindowCanvasGr = descriptionWindow.GetComponent<CanvasGroup>();
         ShowWindow(descrWindowCanvasGr);
+    }
+
+    private void ShowWindowWithoutDescription(GameObject window)
+    {
+        window.SetActive(true);
+        CanvasGroup windowCanvasGr = window.GetComponent<CanvasGroup>();
+        ShowWindow(windowCanvasGr);
     }
 
 
@@ -479,5 +489,12 @@ public class UIManager : MonoBehaviour
 
     }
 
-
+    //[SerializeField] Shares toAuction;
+    public void ShowAuctionWindow(Shares share, int secondPlayerNum, int thirdPlayerNum, int fourthPlayerNum)
+    {
+        ShowWindowWithoutDescription(auctionWindow);
+        AuctionWindow auctionW = auctionWindow.GetComponent<AuctionWindow>();
+        auctionW.OpenWindow(share, secondPlayerNum, thirdPlayerNum, fourthPlayerNum);
+        //auctionW.OpenWindow(toAuction, 1, 2, 3);
+    }
 }
