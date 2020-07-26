@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerMovement[] playerMovements;
     public int activePlayerNum;
     [SerializeField] float changePlayerTime;
+    public int winnerPlayerNum; //номер победившего игрока
 
     [Header("Работа с UI")]
     [SerializeField] UIManager UIManager;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
     public int colonyMovementCost = -200;
     public Cell slavaryMarket; //клетка, куда отправляешься из колоний, если кончились деньги на движение
     public float casinoRewardCoef; // коэффициент казино
+    [SerializeField] int maxRoundBeforeEnd;
+    [SerializeField] int retiredPlayers = 0;
 
     [Header("Фондовая Биржа")]
     [SerializeField] Shares[] tradableShares;
@@ -67,7 +70,7 @@ public class GameManager : MonoBehaviour
     [Header("Все акции в игре")]
     [SerializeField] Shares[] allShares;
     [SerializeField] Player[] shareOwner;
-    
+
 
     [Header("Кубик")]
     [SerializeField] Dice dice;
@@ -84,8 +87,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Игровое поле")]
     public Cell[] cellsNumber; //клетки в правильном порядке, чтобы правильно перелетать
-
-    [SerializeField] int[] unsoldShares;
+    
+    //[SerializeField] int[] unsoldShares;
 
 
 
@@ -121,7 +124,7 @@ public class GameManager : MonoBehaviour
     void SetPlayerInUI()
     {
         Player activePlayer = playerMovements[activePlayerNum].GetComponent<Player>();
-        Player secondPlayer = playerMovements[(activePlayerNum+1) % 4].GetComponent<Player>();
+        Player secondPlayer = playerMovements[(activePlayerNum + 1) % 4].GetComponent<Player>();
         Player thirdPlayer = playerMovements[(activePlayerNum + 2) % 4].GetComponent<Player>();
         Player fourthPlayer = playerMovements[(activePlayerNum + 3) % 4].GetComponent<Player>();
 
@@ -137,7 +140,7 @@ public class GameManager : MonoBehaviour
     public int GiveCorporationPrice(Shares corporation)
     {
 
-        int corporationIndex =-1;
+        int corporationIndex = -1;
 
         for (int i = 0; i < tradableShares.Length; i++)
         {
@@ -188,7 +191,7 @@ public class GameManager : MonoBehaviour
         int cashRevenue = 0;
         cashRevenue += share.revenueFix;
 
-        if (share.revenuePercent!=0)
+        if (share.revenuePercent != 0)
         {
 
 
@@ -204,7 +207,7 @@ public class GameManager : MonoBehaviour
                 cashRevenue += GiveCorporationPrice(share) * Mathf.RoundToInt(share.revenuePercent);
 
             }
-            
+
         }
 
         return cashRevenue;
@@ -254,13 +257,16 @@ public class GameManager : MonoBehaviour
     // говорит скрипту игрока начислить себе акцию, тот в свою очередь скажет какую цену ей установить если это корпорация
     public void GiveShareToPlayer(Player player, Shares share)
     {
-        player.AddShare(share);
-        for (int i = 0; i < allShares.Length; i++)
-        {
-            if (allShares[i] == share)
+        if (IsPlayerInGame(player))
+        { 
+            player.AddShare(share);
+            for (int i = 0; i < allShares.Length; i++)
             {
-                shareOwner[i] = player;
-                break;
+                if (allShares[i] == share)
+                {
+                    shareOwner[i] = player;
+                    break;
+                }
             }
         }
     }
@@ -308,7 +314,7 @@ public class GameManager : MonoBehaviour
     {
         bool generator = false;
         Player activePl = playerMovements[playerNum].GetComponent<Player>();
-        for(int i=0; i< goodsGenerators.Length; i++)
+        for (int i = 0; i < goodsGenerators.Length; i++)
         {
             if (activePl.playerShares.Contains(goodsGenerators[i]))
             {
@@ -332,7 +338,7 @@ public class GameManager : MonoBehaviour
     }
 
     //возвращает цвет игрока с определенным номером
-    public Color GetPlayerColorNum(int playerNum) 
+    public Color GetPlayerColorNum(int playerNum)
     {
         Player activePl = playerMovements[playerNum].GetComponent<Player>();
         return activePl.playerColor;
@@ -358,24 +364,14 @@ public class GameManager : MonoBehaviour
 
     public void ChangeBossWallet(int cashAdd, int goldAdd, int oilAdd, int carsAdd, int colaAdd, int drugsAdd, int robberyAdd, int colonyAdd)
     {
-        int bossNum = -1;
-        for (int i = 0; i < playerMovements.Length; i++)
-        {
-            Player player = playerMovements[i].GetComponent<Player>();
-            if (player.bossCard)
-            {
-                bossNum = i;
-                break;
-            }
-        }
+        Player bossPlayer = WhoIsBossPlayer();
 
-        if (bossNum != -1)
+        if (bossPlayer != null)
         {
-            Player player = playerMovements[bossNum].GetComponent<Player>();
-            player.WalletChange(cashAdd, goldAdd, oilAdd, carsAdd, colaAdd, drugsAdd, robberyAdd, colonyAdd);
+            bossPlayer.WalletChange(cashAdd, goldAdd, oilAdd, carsAdd, colaAdd, drugsAdd, robberyAdd, colonyAdd);
         }
     }
-    
+
     // возвращает номер игрока босса
     public int WhoIsBossNum()
     {
@@ -383,7 +379,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < playerMovements.Length; i++)
         {
             Player player = playerMovements[i].GetComponent<Player>();
-            if (player.bossCard)
+            if (player.bossCard && IsPlayerInGame(player))
             {
                 bossNum = i;
                 return bossNum;
@@ -437,11 +433,11 @@ public class GameManager : MonoBehaviour
             {
                 victim = secondPlayer.GetComponent<Player>();
             }
-            else if(cellOrderFromRamboCell[i] == thirdPlayerCell)
+            else if (cellOrderFromRamboCell[i] == thirdPlayerCell)
             {
                 victim = thirdPlayer.GetComponent<Player>();
             }
-            else if(cellOrderFromRamboCell[i] == fourthPlayerCell)
+            else if (cellOrderFromRamboCell[i] == fourthPlayerCell)
             {
                 victim = fourthPlayer.GetComponent<Player>();
             }
@@ -456,6 +452,12 @@ public class GameManager : MonoBehaviour
         return playerMovements[playerNum].inGame;
     }
 
+    public bool IsPlayerInGame(Player player)
+    {
+        PlayerMovement plMvmnt = player.GetComponent<PlayerMovement>();
+        return plMvmnt.inGame;
+    }
+
     public bool AreThereAnyPlayerForMovie()
     {
         bool exist = false;
@@ -463,9 +465,9 @@ public class GameManager : MonoBehaviour
         foreach (PlayerMovement playerI in playerMovements)
         {
             if (playerI.currentCell.cellWayTitle != "BUSINESS")
-            { 
+            {
                 exist = true;
-            
+
             }
         }
         return exist;
@@ -474,7 +476,7 @@ public class GameManager : MonoBehaviour
     public void SetPlayerCards(bool boss, bool police, bool army, bool woolfy, bool rabby, bool taxFree, bool badHarvest, bool mediaCrisis, bool revenueBlock)
     {
         Player player = playerMovements[activePlayerNum].GetComponent<Player>();
-        player.SetCard(boss, police, army, woolfy,  rabby,  taxFree,  badHarvest,  mediaCrisis, revenueBlock);
+        player.SetCard(boss, police, army, woolfy, rabby, taxFree, badHarvest, mediaCrisis, revenueBlock);
     }
 
     //если значение отрицательное, то забирает имеющуюся карточку, если положительное, то дает карточку, если 0, то ничего не делает
@@ -487,7 +489,7 @@ public class GameManager : MonoBehaviour
 
     void InitiatePlayer(Player player)
     {
-        player.WalletChange(startingLoan, 0, 0, 0, 0, 0, 0,0);
+        player.WalletChange(startingLoan, 0, 0, 0, 0, 0, 0, 0);
         player.startingLoan = startingLoan;
         player.SetCard(false, false, false, false, false, false, false, false, false);
         player.deposites = 0;
@@ -522,22 +524,32 @@ public class GameManager : MonoBehaviour
     public void NextPlayer()
     {
         activePlayerNum = (activePlayerNum + 1) % 4;
-        SetPlayerInUI();
-        SwitchCameraToPlayer(playerMovements[activePlayerNum]);
+        if (IsPlayerInGameNum(activePlayerNum))
+        {
+            SetPlayerInUI();
+            SwitchCameraToPlayer(playerMovements[activePlayerNum]);
+            StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
+
+        }
+        else
+        {
+            NextPlayer();
+        }
+                  
     }
 
     public void NextPlayerTurn()
     {
         PlayerMovement playerMvmnt = WhoIsPlayerMVMNT();
-        if (playerMvmnt.extraTurnNumber > 0)
+        if (playerMvmnt.extraTurnNumber > 0 )
         {
             playerMvmnt.extraTurnNumber -= 1;
         }
         else
-        { 
+        {
             NextPlayer();
         }
-        StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
+        //StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
 
 
 
@@ -571,16 +583,16 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < startDice.Length; i++)
         {
-            for (int j = 0; j < startDice.Length - i-1; j++)
+            for (int j = 0; j < startDice.Length - i - 1; j++)
             {
                 if (startDice[j] < startDice[j + 1])
                 {
                     int z = startDice[j];
                     PlayerMovement playerZ = playerMovements[j];
-                    
+
                     startDice[j] = startDice[j + 1];
                     playerMovements[j] = playerMovements[j + 1];
-                    
+
                     startDice[j + 1] = z;
                     playerMovements[j + 1] = playerZ;
                 }
@@ -591,11 +603,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void RetireActivePlayer()
-    {
-        WhoIsPlayerMVMNT().inGame = false;
-        //TBD
-    }
+
 
     public void SlaveActivePlayer()
     {
@@ -619,14 +627,14 @@ public class GameManager : MonoBehaviour
     //
     //
     //изменение состояния
-    
+
     [Header("Состояния игры")]
     GameStates activeGMState; // активное состояние
 
     // STARTDICEWAITING
     //сколько каждый из игроков кинул на старте
     int[] startDice = { 0, 0, 0, 0 };
-    
+
 
     bool diceRolling = false;
 
@@ -642,7 +650,7 @@ public class GameManager : MonoBehaviour
         TURN_DICE_THROW_WAITING, // ожидаем, когда игрок кинет кубик, чтобы понять сколько ему нужно походить
         TURN_CAP_MOVING_WAITING, // ожидаем, когда игрок походит фишкой
         TURN_CHECK_CHOOSE //перед каждым броском кубика проверяем не стоит ли игрок на клетке с выбором
-    
+
     }
 
 
@@ -650,8 +658,8 @@ public class GameManager : MonoBehaviour
     {
 
         activeGMState = newState;
-        
-        switch(newState)
+
+        switch (newState)
         {
             case GameStates.START_DICE_THROW_WAITING:
 
@@ -773,6 +781,87 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Функция начисления всего в конце хода
+    public void GiveRoundBonusToPlayer(Player player)
+    {
+        player.RevenueCount();
+    }
+
+    public void GiveRoundBonusToActivePlayer()
+    {
+        Player player = WhoIsPlayer();
+        GiveRoundBonusToPlayer(player);
+    }
+
+    //Проигрыши и победы
+
+    public void RetireActivePlayer()
+    {
+        int winner = -1;
+        retiredPlayers += 1;
+        if (retiredPlayers == 3)
+        {
+            winner = WhoIslastPlayer();
+            GameOver(winner, true);
+
+        }
+        else
+        { 
+            PlayerMovement activePlayerMVMNT = WhoIsPlayerMVMNT();
+            Player activePlayer = WhoIsPlayer();
+            activePlayer.ReturnAllShares();
+            activePlayerMVMNT.inGame = false;
+            activePlayerMVMNT.GoToCellWithoutActivation(cellsNumber[0]);
+            NextPlayer();
+        
+        }
 
 
+    }
+
+    int WhoIslastPlayer()
+    {
+        int foundNum = -1;
+        for (int i = 0; i < 4; i++)
+        {
+            if (IsPlayerInGameNum(i))
+            {
+                foundNum =  i;
+                break;
+            }
+        }
+        return foundNum;
+    }
+
+    public void IfLastRound(int round)
+    {
+        if (round >= maxRoundBeforeEnd)
+        {
+            
+            GameOver(CountWinner(), true);
+        }
+    }
+
+    public int CountWinner()
+    {
+        int maxCash = playerMovements[3].GetComponent<Player>().cash;
+        winnerPlayerNum = 3;
+        for (int i = 0; i < 4; i++)
+        {
+            int cashI = playerMovements[3 - i].GetComponent<Player>().cash;
+            if (cashI > maxCash)
+            {
+                winnerPlayerNum = 3 - i;
+                maxCash = cashI;
+            }
+        }
+        return winnerPlayerNum;
+    }
+
+    public void GameOver(int winnerPlayerNum, bool winOrDraw)
+    {
+        Player winner = playerMovements[winnerPlayerNum].GetComponent<Player>();
+        UIManager.Instance.ShowGameOverWindow(winner, winOrDraw);
+
+    }
 }

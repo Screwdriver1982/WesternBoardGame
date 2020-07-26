@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class BuyDrugsWindow : MonoBehaviour
 {
     [SerializeField] CanvasGroup window;
-
+    [SerializeField] GameObject drugsIcon;
+    [SerializeField] GameObject trinketsIcon;
     [SerializeField] int cost; // цена за 1 штуку, для колониального кредита должна быть отрицательной
     [SerializeField] int maxNumbers = 10; // максимальное количество для покупки
     int currentNumber; //сколько есть на старте у игрока
@@ -36,17 +37,25 @@ public class BuyDrugsWindow : MonoBehaviour
         colony = 0;
         robbery = 0;
         bet = 0;
-        
+        drugsIcon.SetActive(false);
+        trinketsIcon.SetActive(false);
+
 
         player = GameManager.Instance.WhoIsPlayer();
 
         if (goodsTypeW == "Drugs")
         {
             currentNumber = player.drugs;
+            slider.maxValue = player.drugs + maxNumbers;
+            slider.minValue = 0;
+            drugsIcon.SetActive(true);
+
+
 
         }
         else if (goodsTypeW == "Trinkets")
         {
+            trinketsIcon.SetActive(true);
             currentNumber = player.trinkets;
             if (wayTypeW == "Other")
             {

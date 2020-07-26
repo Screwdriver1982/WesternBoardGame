@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DescriptionWindow : MonoBehaviour
 {
-
+    [SerializeField] CanvasGroup window;
     [SerializeField] Color businessColor;
     [SerializeField] Color criminalColor;
     [SerializeField] Color colonialColor;
@@ -47,6 +47,11 @@ public class DescriptionWindow : MonoBehaviour
         {
             UIManager.Instance.HideWindow(gameObject.GetComponent<CanvasGroup>());
         }
+    }
+
+    public void OkButtonDescr()
+    {
+        UIManager.Instance.HideWindow(window);
     }
 
 }

@@ -56,7 +56,8 @@ public class Player : MonoBehaviour
     public int laborIndex;
 
     [Header("Рассчитанные разовые доходы и изменения")]
-    public int cashRevenue;
+    public int totalCashRevenue;
+    public int sharesRevenue;
     public int goldRevenue;
     public int oilRevenue;
     public int carsRevenue;
@@ -74,6 +75,8 @@ public class Player : MonoBehaviour
 
     //убыток с кредитов
     public int loanTax;
+    //сколько было отдано за колониальный кредит
+    public int colonyLoanReturn;
 
     //доход с мозгов после 3 кругов
     public int brainsGoldRevenue;
@@ -109,6 +112,7 @@ public class Player : MonoBehaviour
     {
         loanPercents = GameManager.Instance.baseLoanPercents;
         depositePercents = GameManager.Instance.baseDepositePercents;
+        onRevenueCount += RoundChanges;
     }
 
     // Функция меняет кошелек игрока
@@ -120,10 +124,10 @@ public class Player : MonoBehaviour
         }
         cash += cashAdd;
         gold = Mathf.Max(gold+goldAdd, 0);
-        oil = Mathf.Max(oilAdd,0);
-        cars = Mathf.Max(carsAdd, 0);
-        cola = Mathf.Max(colaAdd, 0);
-        drugs = Mathf.Max(drugsAdd, 0);
+        oil = Mathf.Max(oil+oilAdd, 0);
+        cars = Mathf.Max(cars+carsAdd, 0);
+        cola = Mathf.Max(cola+colaAdd, 0);
+        drugs = Mathf.Max(drugs+drugsAdd, 0);
         robberiedMoney += robberyAdd;
         colonyMoney += colonyAdd;
 
@@ -220,66 +224,7 @@ public class Player : MonoBehaviour
         return medias;
     }
 
-    //Функция считает что получит игрок в конце круга
-    public void RevenueCount()
-    {
-        //зануляем доход, записанный в прошлом круге
-        cashRevenue = 0;
-        goldRevenue = 0;
-        oilRevenue = 0;
-        carsRevenue = 0;
-        colaRevenue = 0;
-        stockExchangeIndex = 0;
-
-        //идем подряд по всем акциями игрока и считаем, сколько он должен получить чего, тут только подсчет, без выдачи
-        for (int i = 0; i < playerShares.Count; i++)
-        {
-            Shares shareI = playerShares[i];
-            if (shareI.typeOfShares != "Corporation")
-            {
-                if ((shareI.typeOfShares == "Plantaion" || shareI.typeOfShares == "DrugsPlantation") && !badHarvestCard
-                    || (shareI.typeOfShares == "Media" && !mediaCrisisCard)
-                    || shareI.typeOfShares == "Common")
-                {
-                    cashRevenue += shareI.revenueFix;
-                    cashRevenue += shareI.cost * Mathf.RoundToInt(shareI.revenuePercent);
-                }
-
-                goldRevenue += shareI.goldRevenueFix;
-                if (shareI.typeOfShares == "Media" && !mediaCrisisCard)
-                {   
-                    //проверяем есть ли хоть одно средство массовой информации, если есть будем повышать курс акций
-                    stockExchangeIndex = 1;
-                }
-            }
-            else
-            {
-                cashRevenue += shareI.revenueFix;
-                cashRevenue += GameManager.Instance.GiveCorporationPrice(shareI) * Mathf.RoundToInt(shareI.revenuePercent);
-                carsRevenue += Mathf.FloorToInt(shareI.carsFromCapital * cash / 10000);
-                colaRevenue += Mathf.FloorToInt(shareI.colaFromCapital * cash / 10000);
-
-            }
-        }
-        
-        //считаем заработок с депозитов
-        depositeRevenue = Mathf.FloorToInt(deposites * depositePercents);
-        
-        //считаем траты на проценты по кредитам со знаком +
-        if (!taxFreeCard)
-        {
-            loanTax = -Mathf.FloorToInt(loans * loanPercents);
-
-        }
-
-        //считаем заработал ли золото с мозгов
-        brainsGoldRevenue = brains[0] * 20;
-
-        //считаем должен ли отдать колониальный займ
-
-        onRevenueCount();
-
-    }
+    
 
     //подсчитываем разовый доход с плантаций
     public void PlantationRevenue()
@@ -322,6 +267,13 @@ public class Player : MonoBehaviour
 
     public void ChangeCards(int boss, int police, int army, int woolfy, int rabby, int taxFree, int badHarvest, int mediaCrisis, int revenueBlock)
     {
+        Player bossPlayer = GameManager.Instance.WhoIsBossPlayer();
+        if (boss == 1 && (bossPlayer!=this))
+        {
+            bossPlayer.bossCard = false;
+            bossPlayer.onCashChanges();
+        }
+
         bossCard = (boss > 0) || ((boss >= 0) & bossCard);
         policeCard = (police > 0) || ((police >= 0) & policeCard);
         armyCard = (army > 0) || ((army >= 0) & armyCard);
@@ -332,6 +284,8 @@ public class Player : MonoBehaviour
         {
             onCardsChanges();
         }
+
+        
 
         taxFreeCard = (taxFree > 0) || ((taxFree >= 0) & taxFreeCard);
         badHarvestCard = (badHarvest > 0) || ((badHarvest >= 0) & badHarvestCard);
@@ -391,19 +345,105 @@ public class Player : MonoBehaviour
 
     }
 
+    //Функция считает что получит игрок в конце круга
+    public void RevenueCount()
+    {
+        //зануляем доход, записанный в прошлом круге
+        totalCashRevenue = 0;
+        sharesRevenue = 0;
+        goldRevenue = 0;
+        oilRevenue = 0;
+        carsRevenue = 0;
+        colaRevenue = 0;
+        stockExchangeIndex = 0;
+
+        //идем подряд по всем акциями игрока и считаем, сколько он должен получить чего, тут только подсчет, без выдачи
+        for (int i = 0; i < playerShares.Count; i++)
+        {   
+            Shares shareI = playerShares[i];
+            if (shareI.typeOfShares != "Corporation")
+            {
+                if ((shareI.typeOfShares == "Plantaion" || shareI.typeOfShares == "DrugsPlantation") && !badHarvestCard
+                    || (shareI.typeOfShares == "Media" && !mediaCrisisCard)
+                    || shareI.typeOfShares == "Common")
+                {
+                    sharesRevenue += shareI.revenueFix;
+
+                    print(shareI + " +fix => sharesRevenue = " + sharesRevenue);
+
+                    sharesRevenue += Mathf.RoundToInt(shareI.cost * shareI.revenuePercent);
+
+                    print(shareI + " +percent => sharesRevenue = " + sharesRevenue);
+
+                }
+
+                goldRevenue += shareI.goldRevenueFix;
+                if (shareI.typeOfShares == "Media" && !mediaCrisisCard)
+                {
+                    //проверяем есть ли хоть одно средство массовой информации, если есть будем повышать курс акций
+                    stockExchangeIndex = 1;
+                }
+
+            }
+            else
+            {
+                sharesRevenue += shareI.revenueFix;
+
+                print(shareI + " +fix => sharesRevenue = " + sharesRevenue);
+
+                sharesRevenue += GameManager.Instance.GiveCorporationPrice(shareI) * Mathf.RoundToInt(shareI.revenuePercent);
+
+                print(shareI + " +percent => sharesRevenue = " + sharesRevenue);
+
+                carsRevenue += Mathf.FloorToInt(shareI.carsFromCapital * cash / 10000);
+                colaRevenue += Mathf.FloorToInt(shareI.colaFromCapital * cash / 10000);
+
+            }
+        }
+        
+        depositeRevenue = Mathf.FloorToInt(deposites * depositePercents);
+
+        if (!revenueBlockCard)
+        {
+            totalCashRevenue += sharesRevenue;
+            totalCashRevenue += depositeRevenue;
+            totalCashRevenue += GameManager.Instance.roundBaseMoney;
+        }
+        
+        
+
+        //считаем траты на проценты по кредитам со знаком +
+        if (!taxFreeCard)
+        {
+            loanTax = -Mathf.FloorToInt(loans * loanPercents);
+
+        }
+        totalCashRevenue += loanTax;
+
+
+
+
+        //считаем заработал ли золото с мозгов
+        brainsGoldRevenue = brains[0] * 20;
+        goldRevenue += brainsGoldRevenue;
+        //считаем должен ли отдать колониальный займ
+        colonyLoanReturn = -colonyLoan;
+        totalCashRevenue -= colonyLoan;
+
+        onRevenueCount();
+
+    }
+
+
+
 
     //функция начисляющая и меняющая все после круга
     public void RoundChanges()
     {
-        int cashAdd = GameManager.Instance.roundBaseMoney + cashRevenue + depositeRevenue - loanTax - colonyLoan;
-        int goldAdd = goldRevenue + brainsGoldRevenue;
-        int oilAdd = oilRevenue;
-        int carsAdd = carsRevenue;
-        int colaAdd = colaRevenue;
 
         //обновляем кошелек и удаляем карточки
-        WalletChange(cashAdd, goldAdd, oilAdd, carsAdd, colaAdd, 0, 0, 0);
-        SetCard(false, false, false, false, false, false, false, false, false);
+        WalletChange(totalCashRevenue, goldRevenue, oilRevenue, carsRevenue, colaRevenue, 0, 0, 0);
+        ChangeCards(-1, -1, -1, -1, -1, -1, -1, -1, -1);
 
         //прокручиваем мозги
         brains[0] = brains[1];

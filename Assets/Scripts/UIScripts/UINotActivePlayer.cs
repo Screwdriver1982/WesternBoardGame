@@ -10,6 +10,7 @@ public class UINotActivePlayer : MonoBehaviour
     [SerializeField] Text cashText;
     [SerializeField] GameObject bossCard;
     [SerializeField] Image playerAvatar;
+    [SerializeField] GameObject bankrupt;
 
     public void SetPlayer(Player newPlayer)
     {
@@ -27,9 +28,18 @@ public class UINotActivePlayer : MonoBehaviour
 
     void PlayerWalletUpdate()
     {
-        cashText.text = "" + player.cash + "$";
 
-        bossCard.SetActive(player.bossCard);
+        if (GameManager.Instance.IsPlayerInGame(player))
+        {
+
+            cashText.text = "" + player.cash + "$";
+            bossCard.SetActive(player.bossCard);
+            bankrupt.SetActive(false);
+        }
+        else
+        {
+            bankrupt.SetActive(true);
+        }
     }
     
 }

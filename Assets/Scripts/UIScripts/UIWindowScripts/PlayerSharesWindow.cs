@@ -37,11 +37,6 @@ public class PlayerSharesWindow : MonoBehaviour
 
     }
 
-    IEnumerator DrawSharesCoroutine(float timeToDraw)
-    {
-        yield return new WaitForSeconds(timeToDraw);
-        DrawShares();
-    }
 
     public void OkButton()
     {

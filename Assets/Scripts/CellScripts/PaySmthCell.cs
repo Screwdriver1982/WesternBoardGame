@@ -112,19 +112,23 @@ public class PaySmthCell : Cell
                 break;
 
             case CellPayType.CORPORATION_TAX:
+                print("enter corporation tax area");
                 for (int j = 0; j < shares.Length; j++)
                 {
+
                     if (activePlayer == GameManager.Instance.GetShareOwner(shares[j]))
                     {
+                        
                         if (shares[j].typeOfShares == "Corporation")
                         {
+                            print("corporation = "+ shares[j]);
                             cashAddTemp -= Mathf.FloorToInt(GameManager.Instance.GiveCorporationPrice(shares[j]) * taxRate);
-
+                            print("Tax = " + cashAddTemp);
                         }
-                        else
-                        {
-                            cashAddTemp -= shares[j].cost;
-                        }
+                        //else
+                        //{
+                        //    cashAddTemp -= shares[j].cost;
+                        //}
                     }
                 }
                 beneficiar = null;
@@ -321,7 +325,7 @@ public class PaySmthCell : Cell
 
         }
 
-
+        print("cashAddTemp в конце скрипта клетки " + cashAddTemp);
         UIManager.Instance.ShowPaySmthWindow(cellIcon,
                                              cellTitle,
                                              cellDescription,

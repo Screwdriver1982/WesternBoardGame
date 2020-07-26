@@ -43,9 +43,12 @@ public class PlayerMovement : MonoBehaviour
     public bool reversMovement; //при начале следующего хода игрока сбросится в False, пока действует позволяет пользоваться альт.путем назад
 
     [Header("Клетка")]
-    public Cell currentCell;
+    public Cell currentCell; //текущая клетка игрока
+    [SerializeField] Cell roundBonusCell; //клетка при прохождении или остановке на которой игрок получает доход
 
     Vector3 startPosition;
+    [SerializeField]bool firstCellPassed = false; //флаг отвечающий за то, какой раз игрок проходит стартовую клетку
+    [SerializeField] int roundPassed = 0; //количество пройденных игроком кругов
 
 
 
@@ -439,7 +442,22 @@ public class PlayerMovement : MonoBehaviour
         {
             secondCircleColony = true;
         }
-        AllowMovement();
+
+        if (currentCell == roundBonusCell)
+        {
+            if (firstCellPassed)
+            {
+                roundPassed += 1;
+                GameManager.Instance.GiveRoundBonusToActivePlayer();
+                UIManager.Instance.ShowRoundBonusWindow();
+                GameManager.Instance.IfLastRound(roundPassed);
+
+            }
+            else
+            {
+                firstCellPassed = true;
+            }
+        }
 
         if (moveLeft == 0)
         {
@@ -447,10 +465,11 @@ public class PlayerMovement : MonoBehaviour
             ActivateCell(currentCell);
         }
 
+        AllowMovement();
     }
     void ActivateCell(Cell cell)
     {
-        currentCell.ActivateCell();
+        cell.ActivateCell();
     }
 
     public int WhatIsDirection()

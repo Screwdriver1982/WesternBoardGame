@@ -71,6 +71,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject chanceWindow; //окно Шанса, движение назад
     [SerializeField] GameObject auctionWindow;//окно аукциона
     [SerializeField] GameObject stockExchangeWindow;//окно с информацией о цене корпораций и товаров
+    [SerializeField] GameObject laborIndexWindow; //окно индекса рабочей силы
+    [SerializeField] GameObject roundBonusWindow; //окно, где отображается все начисленное
+    [SerializeField] GameObject gameOverWindow; //окно с окончанием игры
 
 
 
@@ -506,4 +509,26 @@ public class UIManager : MonoBehaviour
         stockExchangeW.OpenWindow();
     }
 
+    public void ShowLaborIndexWindow()
+    {
+        ShowWindowWithoutDescription(laborIndexWindow);
+        LaborIndexWindow laborIndexW = laborIndexWindow.GetComponent<LaborIndexWindow>();
+        laborIndexW.OpenWindow();
+    }
+
+    public void ShowRoundBonusWindow()
+    {
+        ShowWindowWithoutDescription(roundBonusWindow);
+        RoundBonusWindow rounBonusW = roundBonusWindow.GetComponent<RoundBonusWindow>();
+        rounBonusW.OpenWindow();
+    }
+
+    public void ShowGameOverWindow(Player winner, bool winOrDraw)
+    {
+        ShowWindowWithoutDescription(gameOverWindow);
+        GameOverWindow gameOverW = gameOverWindow.GetComponent<GameOverWindow>();
+        gameOverW.OpenWindow(winner, winOrDraw);
+    }
 }
+
+

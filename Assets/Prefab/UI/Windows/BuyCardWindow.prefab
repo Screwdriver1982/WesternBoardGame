@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 360, y: -150}
+  m_AnchoredPosition: {x: 82, y: -156}
   m_SizeDelta: {x: -1262.3213, y: -552.96765}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3820679930772401038
@@ -114,7 +114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -420, y: -244}
+  m_AnchoredPosition: {x: -301, y: -242}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2832398882622461708
@@ -244,7 +244,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 383, y: -238}
+  m_AnchoredPosition: {x: 105, y: -244}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1523001985362470402
@@ -446,12 +446,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5613257578193929340}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 524.8, y: 120.1}
-  m_SizeDelta: {x: 327.63867, y: 277.78992}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -300, y: -300}
+  m_SizeDelta: {x: 600, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5613257576838513211
 CanvasRenderer:
@@ -474,13 +474,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 347c64058dc9e3a42804fc9b05fb351e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 13147f740fc18fb4eb2fc0065f3e723c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -520,7 +520,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5613257578193929340}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -555,7 +555,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 357a15fcb03765d4e94d67636779d3e7, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
@@ -598,7 +598,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5613257578193929340}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -633,7 +633,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 357a15fcb03765d4e94d67636779d3e7, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
@@ -676,7 +676,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5613257578193929340}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -711,7 +711,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 357a15fcb03765d4e94d67636779d3e7, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
@@ -756,10 +756,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 5613257576838513189}
   - {fileID: 5613257576936422659}
   - {fileID: 5613257577149913492}
   - {fileID: 5613257577348726894}
-  - {fileID: 5613257576838513189}
   - {fileID: 7975222545322661919}
   - {fileID: 3983376283377773354}
   - {fileID: 9013851242533081572}
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.48883057, g: 0.6013041, b: 0.6132076, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -832,10 +832,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e678f9d5db413841bd15a2c29f1f642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  businessColor: {r: 0.03034888, g: 0.050560705, b: 0.5849056, a: 0}
-  criminalColor: {r: 0.3207547, g: 0.04387683, b: 0.04387683, a: 0}
-  colonialColor: {r: 0.0485938, g: 0.49056602, b: 0.06029963, a: 0}
-  klondikeColor: {r: 0.7264151, g: 0.38554677, b: 0, a: 0}
+  businessColor: {r: 0.03034888, g: 0.050560705, b: 0.5849056, a: 1}
+  criminalColor: {r: 0.3207547, g: 0.04387683, b: 0.04387683, a: 1}
+  colonialColor: {r: 0.0485938, g: 0.49056602, b: 0.06029963, a: 1}
+  klondikeColor: {r: 0.7264151, g: 0.38554677, b: 0, a: 1}
   title: {fileID: 5613257576936422658}
   description: {fileID: 5613257577149913451}
   wayTitle: {fileID: 5613257577348726893}
