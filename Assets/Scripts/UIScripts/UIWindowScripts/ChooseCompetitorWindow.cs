@@ -11,6 +11,7 @@ public class ChooseCompetitorWindow : MonoBehaviour
     [SerializeField] Text[] pricesToKill;
     [SerializeField] Text chooseTxt;
     [SerializeField] int[] playerNumbers = { -1, -1, -1 };
+    [SerializeField] Shares protezShare;
     Player activePlayer;
     Player boss;
     int killCostTemp;
@@ -63,14 +64,28 @@ public class ChooseCompetitorWindow : MonoBehaviour
         switch (typeOfWindowTemp)
         {
             case "Kill":
+                print("enter kill area in window");
+                print(activePlayer.cash + killCostTemp);
                 if (activePlayer.cash + killCostTemp >= 0)
                 {
+                    print("pass cash");
                     activePlayer.WalletChange(killCostTemp, 0, 0, 0, 0, 0, 0, 0);
                     Player victim = GameManager.Instance.GetPlayerByPlayerNum(playerNumbers[buttonOrder]);
+
+                    print("choose victim" + victim);
+
                     GameManager.Instance.MovePlayerToCellNum(playerNumbers[buttonOrder], cellToMoveTemp );
+
+                    print("askMoving to " + cellToMoveTemp);
+
                     if (victim.cash > 0)
                     {
                         victim.WalletChange(-Mathf.FloorToInt(victim.cash * 0.1f), 0, 0, 0, 0, 0, 0, 0);
+                        Player owner = GameManager.Instance.GetShareOwner(protezShare);
+                        if (owner != null)
+                        { 
+                            owner.WalletChange(Mathf.FloorToInt(victim.cash * 0.1f), 0, 0, 0, 0, 0, 0, 0);
+                        }
                     }
                     
                     if (boss != null)

@@ -1536,6 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e678f9d5db413841bd15a2c29f1f642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  window: {fileID: 0}
   businessColor: {r: 0.03034888, g: 0.050560705, b: 0.5849056, a: 0}
   criminalColor: {r: 0.3207547, g: 0.04387683, b: 0.04387683, a: 0}
   colonialColor: {r: 0.0485938, g: 0.49056602, b: 0.06029963, a: 0}
@@ -1571,6 +1572,7 @@ MonoBehaviour:
   - {fileID: 8372338634055947473}
   chooseTxt: {fileID: 5593112354237710889}
   playerNumbers: ffffffffffffffffffffffff
+  protezShare: {fileID: 11400000, guid: 4ebd9f26d041c6945a21d1bdb30a1ad6, type: 2}
 --- !u!1 &7418601957587175979
 GameObject:
   m_ObjectHideFlags: 0

@@ -418,6 +418,38 @@ public class PlayerMovement : MonoBehaviour
         allowMovement = true;
     }
 
+
+
+
+
+
+
+    public void MoveInactivePlayerToCell(Cell cellToMove)
+    {
+        toColony = false;
+        bool needRotation = IfNeedRotation(cellToMove);
+        print(needRotation);
+        currentCell = cellToMove;
+        if (needRotation)
+        {
+            transform.DORotate(currentCell.view, rotateTime).SetEase(Ease.InOutSine).OnComplete(() => GoToCellWithoutActivation(cellToMove));
+        }
+        else
+        {
+            GoToCellWithoutActivation(cellToMove);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
     public void GiveTheTurnToPlayer(int moves)
     {
         playerCamera.gameObject.SetActive(true);
@@ -498,7 +530,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void GoToCellWithoutActivation(Cell targetCell)
     {
-        currentCell = targetCell;
+        
         
         if (playerColor == PlayerColors.RED)
         {
@@ -520,6 +552,7 @@ public class PlayerMovement : MonoBehaviour
             startPosition = targetCell.yellowPosition.transform.position;
             transform.position = startPosition;
         }
+
     }
 
     void EnoughMoneyToMove()

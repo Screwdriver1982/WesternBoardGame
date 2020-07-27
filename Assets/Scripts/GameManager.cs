@@ -353,7 +353,8 @@ public class GameManager : MonoBehaviour
     //отправляет игркоа с определенным номером на клетку
     public void MovePlayerToCellNum(int playerNum, Cell cellToGo)
     {
-        playerMovements[playerNum].GoToCellWithoutActivation(cellToGo);
+        print("enter GM move script for" + playerMovements[playerNum]);
+        playerMovements[playerNum].MoveInactivePlayerToCell(cellToGo);
     }
 
     public void ChangePlayerWallet(int cashAdd, int goldAdd, int oilAdd, int carsAdd, int colaAdd, int drugsAdd, int robberyAdd, int colonyAdd)
