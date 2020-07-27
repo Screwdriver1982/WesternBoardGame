@@ -299,9 +299,10 @@ public class Player : MonoBehaviour
     {
         if (indexChanges != 0)
         {
-            int indexRealChanges = Mathf.Clamp(laborIndex + indexChanges, -5, 5);
-            PlayerCorpChange(indexChanges);
-            PlayerCorpGoodsChanges(-indexChanges);
+            int indexRealChanges = Mathf.Clamp(laborIndex + indexChanges, -5, 5)- laborIndex;
+            
+            PlayerCorpChange(indexRealChanges);
+            PlayerCorpGoodsChanges(-indexRealChanges);
             laborIndex += indexRealChanges;
 
             //если индекс больше 0, то базовый процент уменьшается в 2 раза, если меньше нуля то увеличивается в 2 раза
@@ -337,7 +338,10 @@ public class Player : MonoBehaviour
             {
                 if (playerShares[i].typeOfShares == "Corporation")
                 {
-                    GameManager.Instance.SetCorporationCost(playerShares[i], Mathf.FloorToInt(corpChanges * 0.1f * playerShares[i].cost));
+                    
+                    int realCostChange = Mathf.FloorToInt(corpChanges * 0.1f * playerShares[i].cost);
+                    
+                    GameManager.Instance.SetCorporationCost(playerShares[i], realCostChange);
 
                 }
             }
@@ -451,6 +455,7 @@ public class Player : MonoBehaviour
         brains[2] = 0;
         //возвращаем колонияльный кредит
         colonyLoan = 0;
+        loanOnThisRound = 0;
 
         //меняем индекс корпораций игрока, если у него были медиа
         PlayerCorpChange(stockExchangeIndex);

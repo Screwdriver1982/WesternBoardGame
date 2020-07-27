@@ -18,6 +18,7 @@ public class MovieCell : Cell
             bool suitablePlayer = GameManager.Instance.AreThereAnyPlayerForMovie();
             if (suitablePlayer)
             {
+                print("ask to show window");
                 UIManager.Instance.ShowMovieWindow( cellIcon,
                                                     cellTitle,
                                                     cellDescription,

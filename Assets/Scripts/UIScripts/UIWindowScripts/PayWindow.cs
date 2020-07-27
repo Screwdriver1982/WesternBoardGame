@@ -37,7 +37,7 @@ public class PayWindow : MonoBehaviour
     int oilCostW;
     int carsCostW;
     int colaCostW;
-    int laborChangesW;
+    [SerializeField] int laborChangesW;
     int policeW;
     int armyW;
     int woolfyW;

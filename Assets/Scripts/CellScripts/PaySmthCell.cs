@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PaySmthCell : Cell
 {
@@ -15,7 +16,7 @@ public class PaySmthCell : Cell
     [Header("Изменение награбленного и колоний")]
     public int robberyAdd;
     public int colonyAdd;
-    
+
     public Player boss = null;
     [Header("Изменение цен")]
     public int goldCost;
@@ -43,6 +44,8 @@ public class PaySmthCell : Cell
     Player beneficiarSecond = null;
     [SerializeField] float taxRate; //налог от стоимости акции
     [SerializeField] int starMediaBonus; //сколько дают за каждую газету или телекомпанию
+    [SerializeField] bool payBank; //если включено, то банк получит то, что нужно заплатить, даже если нет владельца
+    [SerializeField] bool fine = false; //означает, что карточка такс фрии тут работает
 
     int beneficiarFreeCash;
     int beneficiarFreeCashSecond;
@@ -54,7 +57,8 @@ public class PaySmthCell : Cell
         CORPORATION_TAX, //заплатить часть стоимости корпорации
         PAY_BOSS, //платим боссу кэш
         PAY_SHARE_OWNER_ONE_TIME_INCOME, //платим держателю акции разовый доход
-        PAY_SHARE_OWNER_CASHSUM, //платим держателю акции сумму в кэше
+        PAY_SHARE_OWNER_CASHSUM,
+        PAY_SHARE_OWNER_GOODS_COST,//платим держателю акции сумму в кэше
         WASTE_DUMP, //держатель военного завода или банка оплачивает разовый доход со всех фирм игроку
         RAMBO, //забирает наличность у следующего за ним игрока
         PROTEZ, //оплачивает услуги протез миссии
@@ -65,7 +69,8 @@ public class PaySmthCell : Cell
         RABBY, // попал на клетку с рэбби
         SHOOTING, // попал в перестрелку
         STARVATION, // голод в колонии
-        COLONIAL_RIVAL //восстание в колонии
+        COLONIAL_RIVAL, //восстание в колонии
+        CORP_COST_CHANGE //изменение цен корпораций
     }
 
 
@@ -84,10 +89,17 @@ public class PaySmthCell : Cell
         switch (cellPayType)
         {
             case CellPayType.COMMON:
-                if (cashCoef != 0 && activePlayer.cash > 0)
+                if (fine && activePlayer.taxFreeCard)
                 {
+                    cashAddTemp = 0;
+                }
+                else
+                { 
+                    if (cashCoef != 0 && activePlayer.cash > 0)
+                    {
 
-                    cashAddTemp += Mathf.FloorToInt(activePlayer.cash * cashCoef);
+                        cashAddTemp += Mathf.FloorToInt(activePlayer.cash * cashCoef);
+                    }
                 }
 
 
@@ -112,25 +124,30 @@ public class PaySmthCell : Cell
                 break;
 
             case CellPayType.CORPORATION_TAX:
-                print("enter corporation tax area");
-                for (int j = 0; j < shares.Length; j++)
-                {
 
-                    if (activePlayer == GameManager.Instance.GetShareOwner(shares[j]))
+                if (!activePlayer.taxFreeCard)
+                {
+                    for (int j = 0; j < shares.Length; j++)
                     {
-                        
-                        if (shares[j].typeOfShares == "Corporation")
+
+                        if (activePlayer == GameManager.Instance.GetShareOwner(shares[j]))
                         {
-                            print("corporation = "+ shares[j]);
-                            cashAddTemp -= Mathf.FloorToInt(GameManager.Instance.GiveCorporationPrice(shares[j]) * taxRate);
-                            print("Tax = " + cashAddTemp);
+
+                            if (shares[j].typeOfShares == "Corporation")
+                            {
+
+                                cashAddTemp -= Mathf.FloorToInt(GameManager.Instance.GiveCorporationPrice(shares[j]) * taxRate);
+
+                            }
+
                         }
-                        //else
-                        //{
-                        //    cashAddTemp -= shares[j].cost;
-                        //}
                     }
                 }
+                else
+                {
+                    cashAddTemp = 0;
+                }
+
                 beneficiar = null;
                 beneficiarFreeCash = 0;
 
@@ -173,6 +190,30 @@ public class PaySmthCell : Cell
                 }
                 beneficiarFreeCash = 0;
                 break;
+            
+
+
+
+            case CellPayType.PAY_SHARE_OWNER_GOODS_COST:
+                beneficiar = GameManager.Instance.GetShareOwner(shares[0]);
+                if ((beneficiar == null && !payBank)|| beneficiar == activePlayer)
+                {
+                    cashAddTemp = 0;
+                }
+
+                cashAddTemp -= goldAdd * GameManager.Instance.goodsCost[0];
+                cashAddTemp -= oilAdd * GameManager.Instance.goodsCost[1];
+                cashAddTemp -= carsAdd * GameManager.Instance.goodsCost[2];
+                cashAddTemp -= colaAdd * GameManager.Instance.goodsCost[3];
+
+
+                beneficiarFreeCash = 0;
+                break;
+
+
+
+
+
 
             case CellPayType.WASTE_DUMP:
 
@@ -232,13 +273,19 @@ public class PaySmthCell : Cell
                 }
                 break;
             case CellPayType.SHARES_INCOME_FROM_PLAYER:
-
-                for (int i = 0; i < shares.Length; i++)
+                if (!activePlayer.taxFreeCard)
                 {
-                    if (activePlayer.playerShares.Contains(shares[i]))
+                    for (int i = 0; i < shares.Length; i++)
                     {
-                        cashAddTemp -= GameManager.Instance.GetShareIncomeCash(shares[i]);
+                        if (activePlayer.playerShares.Contains(shares[i]))
+                        {
+                            cashAddTemp -= GameManager.Instance.GetShareIncomeCash(shares[i]);
+                        }
                     }
+                }
+                else
+                {
+                    cashAddTemp = 0;
                 }
                 break;
 
@@ -321,6 +368,20 @@ public class PaySmthCell : Cell
                 }
                 beneficiar = null;
                 beneficiarFreeCash = 0;
+                break;
+
+            case CellPayType.CORP_COST_CHANGE:
+                if (!GameManager.Instance.DoesPlayerHaveCorporation(activePlayer))
+                {
+                    goldAdd = 0;
+                    break;
+                }
+                else if (activePlayer.gold + goldAdd < 0)
+                {
+                    activePlayer.PlayerCorpChange(-1);
+                    goldAdd = 0;
+                    break;
+                }
                 break;
 
         }

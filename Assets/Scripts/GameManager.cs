@@ -158,14 +158,18 @@ public class GameManager : MonoBehaviour
     //устанавливает стоимость корпорации
     public void SetCorporationCost(Shares corporation, int costChanges)
     {
+        
+
         for (int i = 0; i < tradableShares.Length; i++)
         {
-            if (corporation = tradableShares[i])
+            if (corporation == tradableShares[i])
             {
+                
                 corpCosts[i] = Mathf.Clamp(corpCosts[i] + costChanges,
                                             Mathf.FloorToInt(corporation.cost * 0.1f),
                                             corporation.cost * 2
                                             );
+                
                 onCorpCostChanges();
             }
         }
@@ -190,26 +194,28 @@ public class GameManager : MonoBehaviour
     {
         int cashRevenue = 0;
         cashRevenue += share.revenueFix;
+        
 
         if (share.revenuePercent != 0)
         {
-
+        
 
             if (share.typeOfShares != "Corporation")
             {
 
 
-                cashRevenue += Mathf.RoundToInt(share.cost * share.revenuePercent);
+                cashRevenue += Mathf.FloorToInt(share.cost * share.revenuePercent);
 
             }
             else
             {
-                cashRevenue += GiveCorporationPrice(share) * Mathf.RoundToInt(share.revenuePercent);
+                cashRevenue += Mathf.FloorToInt(GiveCorporationPrice(share) * share.revenuePercent);
 
             }
 
         }
 
+        
         return cashRevenue;
     }
 
@@ -322,6 +328,21 @@ public class GameManager : MonoBehaviour
             }
         }
         return generator;
+    }
+
+    //функция возвращает ответ, есть ли у игрока корпорации
+    public bool DoesPlayerHaveCorporation(Player player)
+    {
+        bool haveCorp = false;
+
+        for (int i = 0; i < tradableShares.Length; i++)
+        {
+            if (player.playerShares.Contains(tradableShares[i]))
+            {
+                haveCorp = true;
+            }
+        }
+        return haveCorp;
     }
 
     public void ChangeGoodsForPlayerNum(int playerNum, int changes)
@@ -545,12 +566,13 @@ public class GameManager : MonoBehaviour
         if (playerMvmnt.extraTurnNumber > 0 )
         {
             playerMvmnt.extraTurnNumber -= 1;
+            StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
         }
         else
         {
             NextPlayer();
         }
-        //StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
+        
 
 
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuyShareCell : Cell
 {
     [SerializeField] Shares share;
+    [SerializeField] Shares resourceShare;
     
 
 
@@ -12,6 +13,13 @@ public class BuyShareCell : Cell
     {
         int cost;
         Player owner = null;
+        Player incomeBeneficiar = null;
+
+        if (resourceShare != null)
+        {
+            incomeBeneficiar = GameManager.Instance.GetShareOwner(resourceShare);
+        }
+
 
         if (share.typeOfShares != "Corporation")
         {
@@ -23,6 +31,13 @@ public class BuyShareCell : Cell
         }
 
         owner = GameManager.Instance.GetShareOwner(share);
+
+        if (incomeBeneficiar != null)
+        {
+            int cashincome=GameManager.Instance.GetShareIncomeCash(resourceShare);
+            print("cash = " + cashincome);
+            incomeBeneficiar.WalletChange(cashincome, 0, 0, 0, 0, 0, 0, 0);
+        }
 
         UIManager.Instance.ShowBuyShareWindow(cellIcon,
                                               cellTitle,
