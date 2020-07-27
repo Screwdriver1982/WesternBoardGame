@@ -64,19 +64,19 @@ public class ChooseCompetitorWindow : MonoBehaviour
         switch (typeOfWindowTemp)
         {
             case "Kill":
-                print("enter kill area in window");
-                print(activePlayer.cash + killCostTemp);
+              
+              
                 if (activePlayer.cash + killCostTemp >= 0)
                 {
-                    print("pass cash");
+                 
                     activePlayer.WalletChange(killCostTemp, 0, 0, 0, 0, 0, 0, 0);
                     Player victim = GameManager.Instance.GetPlayerByPlayerNum(playerNumbers[buttonOrder]);
 
-                    print("choose victim" + victim);
+              
 
                     GameManager.Instance.MovePlayerToCellNum(playerNumbers[buttonOrder], cellToMoveTemp );
 
-                    print("askMoving to " + cellToMoveTemp);
+                 
 
                     if (victim.cash > 0)
                     {

@@ -353,7 +353,7 @@ public class GameManager : MonoBehaviour
     //отправляет игркоа с определенным номером на клетку
     public void MovePlayerToCellNum(int playerNum, Cell cellToGo)
     {
-        print("enter GM move script for" + playerMovements[playerNum]);
+        
         playerMovements[playerNum].MoveInactivePlayerToCell(cellToGo);
     }
 
