@@ -11247,7 +11247,7 @@ PrefabInstance:
     - target: {fileID: 5859019283016721677, guid: f8e8e0a4582d9b54481c89419467c8ff,
         type: 3}
       propertyPath: m_Name
-      value: 51 (not complete)
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 5859019283455339564, guid: f8e8e0a4582d9b54481c89419467c8ff,
         type: 3}
@@ -11307,31 +11307,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 626697264}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad617fe8ba9c9243b0c70710ec9445c, type: 3}
+  m_Script: {fileID: 11500000, guid: 592b761a290f72a4990658822d5df939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   passRight: {fileID: 0}
   passLeft: {fileID: 0}
   passUp: {fileID: 0}
-  passDown: {fileID: 1136382328}
+  passDown: {fileID: 0}
   startMovingRight: {fileID: 0}
   startMovingLeft: {fileID: 0}
   startMovingUp: {fileID: 0}
-  startMovingDown: {fileID: 1136382328}
-  alternativeWay: 1
+  startMovingDown: {fileID: 0}
+  alternativeWay: 0
   colonyCircleCounter: 0
   colonyCircle: 0
   passRightA: {fileID: 0}
   passLeftA: {fileID: 0}
-  passUpA: {fileID: 1092449523}
+  passUpA: {fileID: 0}
   passDownA: {fileID: 0}
   startMovingRightA: {fileID: 0}
   startMovingLeftA: {fileID: 0}
   startMovingUpA: {fileID: 0}
   startMovingDownA: {fileID: 0}
-  cellIcon: {fileID: 0}
-  cellTitle: 
-  cellDescription: 
+  cellIcon: {fileID: 21300000, guid: 981ecb70b42916547a44bbe5b7b6e921, type: 3}
+  cellTitle: "\u0420\u044D\u043C\u0431\u043E - \u043C\u0441\u0442\u0438\u0442\u0435\u043B\u044C"
+  cellDescription: "\u041E\u0442\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0435\u043D\u044C\u0433\u0438
+    \u0443 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0437\u0430
+    \u0432\u0430\u043C\u0438"
   way: 0
   cellWayTitle: 
   cellView: 3
@@ -11340,6 +11342,38 @@ MonoBehaviour:
   bluePosition: {fileID: 626697262}
   greenPosition: {fileID: 626697261}
   yellowPosition: {fileID: 626697260}
+  cashCoef: 0
+  cashAdd: 0
+  goldAdd: 0
+  oilAdd: 0
+  carsAdd: 0
+  colaAdd: 0
+  drugsAdd: 0
+  robberyAdd: 0
+  colonyAdd: 0
+  boss: {fileID: 0}
+  goldCost: 0
+  oilCost: 0
+  carsCost: 0
+  colaCost: 0
+  laborChanges: 0
+  police: 0
+  army: 0
+  woolfy: 0
+  rabby: 0
+  taxFree: 0
+  badHarvest: 0
+  mediaCrisis: 0
+  revenueBlock: 0
+  cellToMoveWithAction: {fileID: 0}
+  cellToMoveWithoutAction: {fileID: 0}
+  shares: []
+  cellPayType: 7
+  protezCoef: 0
+  taxRate: 0
+  starMediaBonus: 0
+  payBank: 0
+  fine: 0
 --- !u!1 &627540268 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5859019283016721677, guid: f8e8e0a4582d9b54481c89419467c8ff,
@@ -19732,11 +19766,11 @@ MonoBehaviour:
   passRight: {fileID: 0}
   passLeft: {fileID: 0}
   passUp: {fileID: 0}
-  passDown: {fileID: 626697266}
+  passDown: {fileID: 0}
   startMovingRight: {fileID: 0}
   startMovingLeft: {fileID: 0}
   startMovingUp: {fileID: 0}
-  startMovingDown: {fileID: 626697266}
+  startMovingDown: {fileID: 0}
   alternativeWay: 1
   colonyCircleCounter: 0
   colonyCircle: 0
@@ -21342,7 +21376,7 @@ MonoBehaviour:
   passDownA: {fileID: 0}
   startMovingRightA: {fileID: 0}
   startMovingLeftA: {fileID: 0}
-  startMovingUpA: {fileID: 626697266}
+  startMovingUpA: {fileID: 0}
   startMovingDownA: {fileID: 0}
   cellIcon: {fileID: 21300000, guid: 3c864ab608515484caadf668f41e0f45, type: 3}
   cellTitle: "\u0428\u0410\u041D\u0421"
@@ -38127,10 +38161,137 @@ MonoBehaviour:
   diceCamera: {fileID: 1058195910}
   freeCamera: {fileID: 1810734773}
   cellOrderFromRamboCell:
-  - {fileID: 146243382}
+  - {fileID: 1092449523}
+  - {fileID: 1728726233}
+  - {fileID: 1741153449}
+  - {fileID: 979606297}
+  - {fileID: 1617305828}
+  - {fileID: 1269601337}
+  - {fileID: 56536697}
+  - {fileID: 572371664}
+  - {fileID: 819135629}
+  - {fileID: 985929393}
+  - {fileID: 926048900}
+  - {fileID: 287773737}
+  - {fileID: 2078390729}
+  - {fileID: 165405669}
+  - {fileID: 1636683989}
+  - {fileID: 618781557}
+  - {fileID: 882238899}
+  - {fileID: 1699206568}
+  - {fileID: 1179159832}
+  - {fileID: 762661833}
+  - {fileID: 764080769}
+  - {fileID: 1789549327}
+  - {fileID: 143595045}
+  - {fileID: 1205787401}
+  - {fileID: 1319322432}
+  - {fileID: 2073069825}
+  - {fileID: 114418299}
+  - {fileID: 171478674}
+  - {fileID: 630499197}
+  - {fileID: 569650896}
+  - {fileID: 347039344}
+  - {fileID: 1553623654}
+  - {fileID: 1570667567}
+  - {fileID: 627540270}
+  - {fileID: 234923837}
+  - {fileID: 1344964068}
+  - {fileID: 874135561}
+  - {fileID: 251732214}
+  - {fileID: 1121587488}
+  - {fileID: 37257292}
+  - {fileID: 2087875242}
+  - {fileID: 1083800707}
+  - {fileID: 1064689872}
+  - {fileID: 874675057}
+  - {fileID: 1539720456}
+  - {fileID: 214387937}
+  - {fileID: 69115274}
+  - {fileID: 56891093}
+  - {fileID: 90341791}
+  - {fileID: 2011289544}
+  - {fileID: 222405776}
+  - {fileID: 1202408957}
+  - {fileID: 1264103935}
+  - {fileID: 1573099540}
+  - {fileID: 1852260768}
+  - {fileID: 1392108843}
+  - {fileID: 517351331}
+  - {fileID: 1295965049}
+  - {fileID: 1585290427}
+  - {fileID: 1508582080}
+  - {fileID: 351941003}
+  - {fileID: 27240650}
+  - {fileID: 558025104}
+  - {fileID: 1624330770}
+  - {fileID: 21178692}
   - {fileID: 2126439406}
   - {fileID: 1327333325}
   - {fileID: 2143028578}
+  - {fileID: 146243382}
+  - {fileID: 1770697156}
+  - {fileID: 757081445}
+  - {fileID: 202805324}
+  - {fileID: 383508121}
+  - {fileID: 1220622834}
+  - {fileID: 1202579288}
+  - {fileID: 1981828831}
+  - {fileID: 809034228}
+  - {fileID: 1775151255}
+  - {fileID: 1660744651}
+  - {fileID: 417240167}
+  - {fileID: 1729692125}
+  - {fileID: 840449782}
+  - {fileID: 162028434}
+  - {fileID: 182770280}
+  - {fileID: 1972961490}
+  - {fileID: 1792553405}
+  - {fileID: 838454238}
+  - {fileID: 1258055847}
+  - {fileID: 2017625176}
+  - {fileID: 159697405}
+  - {fileID: 804551230}
+  - {fileID: 1113710753}
+  - {fileID: 1306342049}
+  - {fileID: 1832177280}
+  - {fileID: 1830233581}
+  - {fileID: 334269591}
+  - {fileID: 75646664}
+  - {fileID: 1586283078}
+  - {fileID: 746142841}
+  - {fileID: 328536615}
+  - {fileID: 393643960}
+  - {fileID: 1672282999}
+  - {fileID: 1009751393}
+  - {fileID: 1371705999}
+  - {fileID: 1722763371}
+  - {fileID: 1288306565}
+  - {fileID: 1785351727}
+  - {fileID: 1136382328}
+  - {fileID: 259715465}
+  - {fileID: 2074118973}
+  - {fileID: 1102953773}
+  - {fileID: 1656808730}
+  - {fileID: 2105705796}
+  - {fileID: 2088522997}
+  - {fileID: 548655469}
+  - {fileID: 691251719}
+  - {fileID: 557317190}
+  - {fileID: 1206530749}
+  - {fileID: 1164641417}
+  - {fileID: 828113985}
+  - {fileID: 599952650}
+  - {fileID: 343194465}
+  - {fileID: 994150819}
+  - {fileID: 950229948}
+  - {fileID: 1629795692}
+  - {fileID: 2114015073}
+  - {fileID: 124685141}
+  - {fileID: 2048042984}
+  - {fileID: 1092001063}
+  - {fileID: 1580378815}
+  - {fileID: 626697266}
   cellsNumber:
   - {fileID: 675300086}
   - {fileID: 146243382}
