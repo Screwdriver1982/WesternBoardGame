@@ -41,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
     public bool toColony = false; //альтернативный путь в колонии, отключается, если такой же флаг у клетки отсутствует
     public bool secondCircleColony = false; //счетчик кругов, есть клетка активатор, есть клетка, которая дает альтерн.путь если включен
     public bool reversMovement; //при начале следующего хода игрока сбросится в False, пока действует позволяет пользоваться альт.путем назад
+    public Cell cellCrimeOne; //клетки при переходе с одной на другую включается secondCircleColony
+    public Cell cellCrimeSecond;
 
     [Header("Клетка")]
     public Cell currentCell; //текущая клетка игрока
@@ -82,22 +84,15 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingUpA;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingUpA;
-                    MoveNextCell(needRotation);
 
-
+                    Movement(nextCell);
 
                 }
                 else if (!startMoveOrPass && currentCell.passUpA != null)
                 {
 
                     Cell nextCell = currentCell.passUpA;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.passUpA;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
                 }
@@ -108,10 +103,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingUp;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingUp;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -120,10 +112,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.passUp;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.passUp;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -147,20 +136,14 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingDownA;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingDownA;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
                 }
                 else if (!startMoveOrPass && currentCell.passDownA != null)
                 {
 
                     Cell nextCell = currentCell.passDownA;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.passDownA;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
                 }
             }
@@ -171,10 +154,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingDown;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingDown;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -183,10 +163,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.passDown;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.passDown;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -209,10 +186,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingLeftA;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingLeftA;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
                 }
                 else if (!startMoveOrPass && currentCell.passLeftA != null)
@@ -233,10 +207,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingLeft;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingLeft;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -246,10 +217,7 @@ public class PlayerMovement : MonoBehaviour
 
 
                     Cell nextCell = currentCell.passLeft;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.passLeft;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -272,10 +240,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingRightA;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingRightA;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -297,10 +262,7 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.startMovingRight;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.startMovingRight;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
 
 
@@ -309,16 +271,29 @@ public class PlayerMovement : MonoBehaviour
                 {
 
                     Cell nextCell = currentCell.passRight;
-                    bool needRotation = IfNeedRotation(nextCell);
-                    TakeMoneyForMovement();
-                    currentCell = currentCell.passRight;
-                    MoveNextCell(needRotation);
+                    Movement(nextCell);
 
                 }
             }
             
         }
     }
+
+    public void Movement(Cell nextCell)
+    {
+        bool needRotation = IfNeedRotation(nextCell);
+        TakeMoneyForMovement();
+
+        if ((currentCell == cellCrimeOne || currentCell == cellCrimeSecond)
+            && (nextCell == cellCrimeOne || nextCell == cellCrimeSecond))
+        {
+            secondCircleColony = true;
+        }
+
+        currentCell = nextCell;
+        MoveNextCell(needRotation);
+    }
+
 
     public void JumpToCellAndActivateIt(Cell nextCell)
     {

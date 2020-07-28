@@ -27,10 +27,10 @@ public class BuyDrugsWindow : MonoBehaviour
     string wayTypeW;
 
 
-    public void OpenWindow(int drugsCost, int drugsMaxNumber, string goodsType, string wayType)
+    public void OpenWindow(int drugsCost, int goodsMaxNumber, string goodsType, string wayType)
     {
         dealCash = 0;
-        maxNumbers = drugsMaxNumber;
+        maxNumbers = goodsMaxNumber;
         cost = drugsCost;
         goodsTypeW = goodsType; //Drugs or Trinkets
         wayTypeW = wayType; //Colony or Other
@@ -57,6 +57,7 @@ public class BuyDrugsWindow : MonoBehaviour
         {
             trinketsIcon.SetActive(true);
             currentNumber = player.trinkets;
+            slider.maxValue = currentNumber + maxNumbers;
             if (wayTypeW == "Other")
             {
                 slider.minValue = currentNumber;
@@ -64,13 +65,14 @@ public class BuyDrugsWindow : MonoBehaviour
             else
             {
                 slider.minValue = 0;
+
             }
         }
         else if (goodsTypeW == "Colonial Bank")
         {
-            currentNumber = player.colonyLoan;
-            slider.minValue = player.colonyLoan;
-            slider.maxValue = currentNumber + maxNumbers;
+            currentNumber = 0;
+            slider.minValue = 0;
+            slider.maxValue = player.cash*2;
 
 
         }
@@ -144,7 +146,20 @@ public class BuyDrugsWindow : MonoBehaviour
     {
         if (dealCash + player.cash >= 0)
         {
-            GameManager.Instance.ChangePlayerWallet(dealCash, 0, 0, 0, afterDealNum - currentNumber, 0, robbery, colony);
+            int addTrinks = 0;
+            int addDrug = 0;
+            if (goodsTypeW == "Drugs")
+            {
+                addDrug = afterDealNum - currentNumber;
+
+            }
+            else if (goodsTypeW == "Trinkets")
+            {
+                addTrinks = afterDealNum - currentNumber;
+            }
+            GameManager.Instance.ChangePlayerWallet(dealCash, 0, 0, 0, 0, addDrug, robbery, colony);
+            GameManager.Instance.WhoIsPlayer().trinkets += addTrinks;
+
             if (getLoan > 0)
             {
                 player.colonyLoan += getLoan;

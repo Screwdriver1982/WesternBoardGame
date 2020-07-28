@@ -362,9 +362,9 @@ public class PaySmthCell : Cell
                 }
                 else if (activePlayer.colonyMoney > 0)
                 {
-                    print("cashAddTemp "+cashAddTemp);
+                    
                     cashAddTemp = -activePlayer.colonyMoney;
-                    print("cashAddTemp " + cashAddTemp);
+                    
                 }
                 beneficiar = null;
                 beneficiarFreeCash = 0;

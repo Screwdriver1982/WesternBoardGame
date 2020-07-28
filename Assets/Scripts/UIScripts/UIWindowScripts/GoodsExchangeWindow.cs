@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GoodsExchangeWindow : MonoBehaviour
 {
     [SerializeField] CanvasGroup window;
-
+    
     [SerializeField] int[] cost = { 0, 0, 0, 0 }; // цена за 1 штуку, последовательность: золото, нефть, авто, кола
     [SerializeField] int[] maxNumbers = { 0, 0, 0, 0 }; // максимальное количество для покупки, последовательность: золото, нефть, авто, кола
     int[] currentNumber = { 0, 0, 0, 0 }; //сколько есть на старте у игрока последовательность: золото, нефть, авто, кола
@@ -18,15 +18,22 @@ public class GoodsExchangeWindow : MonoBehaviour
     [SerializeField] Slider[] slider; //слайдеры
     int playerLaborIndex; //индекс рабочей силы игрока
     Player player;
-
-    public void OpenWindow(int maxGold, int maxOil, int maxCars, int maxCola)
+    [SerializeField] bool goldMarketW = false; //означает, что продается только золото
+    public void OpenWindow(int maxGold, int maxOil, int maxCars, int maxCola, bool goldMarket)
     {
+        slider[0].gameObject.SetActive(true);
+        slider[1].gameObject.SetActive(!goldMarket);
+        slider[2].gameObject.SetActive(!goldMarket);
+        slider[3].gameObject.SetActive(!goldMarket);
+
         maxNumbers[0] = maxGold;
         maxNumbers[1] = maxOil;
         maxNumbers[2] = maxCars;
         maxNumbers[3] = maxCola;
-        
-        
+        goldMarketW = goldMarket;
+
+
+
         player = GameManager.Instance.WhoIsPlayer();
         currentNumber[0] = player.gold;
         currentNumber[1] = player.oil;

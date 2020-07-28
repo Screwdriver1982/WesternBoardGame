@@ -6,6 +6,7 @@ public class BuyShareCell : Cell
 {
     [SerializeField] Shares share;
     [SerializeField] Shares resourceShare;
+    [SerializeField] int goldReward = 0;
     
 
 
@@ -37,6 +38,11 @@ public class BuyShareCell : Cell
             int cashincome=GameManager.Instance.GetShareIncomeCash(resourceShare);
             print("cash = " + cashincome);
             incomeBeneficiar.WalletChange(cashincome, 0, 0, 0, 0, 0, 0, 0);
+        }
+
+        if (owner = null)
+        {
+            GameManager.Instance.WhoIsPlayer().WalletChange(0, goldReward, 0, 0, 0, 0, 0, 0);
         }
 
         UIManager.Instance.ShowBuyShareWindow(cellIcon,

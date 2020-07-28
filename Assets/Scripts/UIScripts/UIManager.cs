@@ -338,11 +338,11 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public void ShowGoodsExchangeWindow(int maxGold, int maxOil, int maxCars, int maxCola)
+    public void ShowGoodsExchangeWindow(int maxGold, int maxOil, int maxCars, int maxCola, bool goldMarket)
     {
         goodsExchangeWindow.SetActive(true);
         GoodsExchangeWindow goodExW = goodsExchangeWindow.GetComponent<GoodsExchangeWindow>();
-        goodExW.OpenWindow(maxGold, maxOil, maxCars, maxCola);
+        goodExW.OpenWindow(maxGold, maxOil, maxCars, maxCola, goldMarket);
         ShowWindow(goodsExchangeWindow.GetComponent<CanvasGroup>());
     }
 

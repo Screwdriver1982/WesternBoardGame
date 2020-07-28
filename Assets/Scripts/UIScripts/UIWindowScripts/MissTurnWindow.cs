@@ -27,8 +27,8 @@ public class MissTurnWindow : MonoBehaviour
     int goldCost;
     int cashCost;
     int missTurn;
-    int police;
-    int army;
+    int police = 0;
+    int army = 0;
     Cell prison;
     Cell rescue;
 
@@ -89,7 +89,7 @@ public class MissTurnWindow : MonoBehaviour
             missText.gameObject.SetActive(false);
             missButton.SetActive(false);
             goodButton.SetActive(true);
-            goodButtonText.text = "Копы свои!";
+            goodButtonText.text = "Армия рулит!";
 
         }
         else if (missType == "boss")//игрок босс
@@ -207,7 +207,7 @@ public class MissTurnWindow : MonoBehaviour
     public void GoodButton()
     {
 
-        GameManager.Instance.ChangePlayerCards(0, police, army, 0, 0, 0, 0, 0,0);
+        GameManager.Instance.ChangePlayerCards(0,police,army,0,0,0,0,0,0);
         GameManager.Instance.NextPlayerTurn();
         UIManager.Instance.HideWindow(window);
 
