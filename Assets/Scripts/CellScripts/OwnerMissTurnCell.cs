@@ -10,13 +10,13 @@ public class OwnerMissTurnCell : Cell
     public override void ActivateCell()
     {
         owner = GameManager.Instance.GetShareOwner(share);
-
+        print("owner Cell = " + owner);
         UIManager.Instance.ShowSmbMissTurnWindow(cellIcon,
                                                cellTitle,
                                                cellDescription,
                                                cellWayTitle,
                                                owner,
                                                missTurn);
-
+        print("correct ask UImanager ");
     }
 }

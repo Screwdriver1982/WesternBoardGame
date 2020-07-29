@@ -198,7 +198,7 @@ public class MissTurnWindow : MonoBehaviour
             { 
                 activePlayerMvmnt.JumpToCellAndActivateIt(rescue);
             }
-            
+            GameManager.Instance.NextPlayerTurn();
             UIManager.Instance.HideWindow(window);
 
         }

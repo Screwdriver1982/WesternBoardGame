@@ -41,14 +41,6 @@ public class DescriptionWindow : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            UIManager.Instance.HideWindow(gameObject.GetComponent<CanvasGroup>());
-        }
-    }
-
     public void OkButtonDescr()
     {
         UIManager.Instance.HideWindow(window);

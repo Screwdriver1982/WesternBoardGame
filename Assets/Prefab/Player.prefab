@@ -95,19 +95,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerColor: 1
+  player: {fileID: 0}
   inGame: 1
+  enoughMoney: 1
+  negativeMoney: 0
   oneCellJumpTime: 0.5
   jumpPower: 3
   rotateTime: 0.5
   activateTime: 1.2
   playerCamera: {fileID: 523123574810748280}
+  moveLeft: 10
   turnMiss: 0
-  currentCell: {fileID: 0}
+  extraTurnNumber: 0
+  movementSound: {fileID: 8300000, guid: 93aa3a5aa04cb864fb43e2fec9123361, type: 3}
   playerTurn: 0
   startMoveOrPass: 1
-  moveLeft: 10
   allowMovement: 1
   dialogIsOpen: 0
+  toColony: 0
+  secondCircleColony: 0
+  reversMovement: 0
+  cellCrimeOne: {fileID: 0}
+  cellCrimeSecond: {fileID: 0}
+  currentCell: {fileID: 0}
+  roundBonusCell: {fileID: 0}
+  firstCellPassed: 0
+  roundPassed: 0
 --- !u!114 &5438831533782607454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,14 +163,17 @@ MonoBehaviour:
   depositePercents: 0
   playerShares: []
   laborIndex: 0
-  cashRevenue: 0
+  totalCashRevenue: 0
+  sharesRevenue: 0
   goldRevenue: 0
   oilRevenue: 0
   carsRevenue: 0
   colaRevenue: 0
+  casinoPossibleReward: 0
   stockExchangeIndex: 0
   depositeRevenue: 0
   loanTax: 0
+  colonyLoanReturn: 0
   brainsGoldRevenue: 0
   brainsConversion: 0
   plantationRevenue: 0

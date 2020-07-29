@@ -86,13 +86,13 @@ public class Cell : MonoBehaviour
         onCellTurnEnded();
     }
 
-    //private void OnMouseDown()
-    //{
-    //    if (EventSystem.current.IsPointerOverGameObject())
-    //    {
-    //        UIManager.Instance.ShowDescriptionWindow(cellIcon, cellTitle, cellDescription, cellWayTitle);
-    //    }
-    //}
+    private void OnMouseDown()
+    {
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            UIManager.Instance.ShowDescriptionWindow(cellIcon, cellTitle, cellDescription, cellWayTitle);
+        }
+    }
 
     private void Start()
     {

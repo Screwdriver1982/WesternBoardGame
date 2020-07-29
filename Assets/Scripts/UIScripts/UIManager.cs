@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
 
 
 
+
     [Header("Различные желтые панели")]
     [SerializeField] GameObject yellowPanel;
     [SerializeField] GameObject throwDicePanel;
@@ -74,10 +75,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject laborIndexWindow; //окно индекса рабочей силы
     [SerializeField] GameObject roundBonusWindow; //окно, где отображается все начисленное
     [SerializeField] GameObject gameOverWindow; //окно с окончанием игры
+    [SerializeField] GameObject menuWindow; //окно с настройками и выходом из игры
 
 
 
     bool isDialogOpen = false;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ShowMenuWindow();
+        }
+    }
 
 
 
@@ -420,6 +430,7 @@ public class UIManager : MonoBehaviour
                                    int cost
                                    )
     {
+        print("UI owner = " + owner);
         ChangeContentDescriptionAndShowWindow(buyShareWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
         BuyShareWindow buyShareW = buyShareWindow.GetComponent<BuyShareWindow>();
         buyShareW.OpenWindow(owner, share, cost);
@@ -448,9 +459,13 @@ public class UIManager : MonoBehaviour
                                       Player missPlayer,
                                       int missTurn)
     {
+        print("missPlayer = " + missPlayer);
         ChangeContentDescriptionAndShowWindow(smbMissTurnWindow, cellIcon, cellTitle, cellDescription, cellWayTitle);
+        print("description pass");
         SmbMissTurnWindow smbMissTurnW = smbMissTurnWindow.GetComponent<SmbMissTurnWindow>();
+        print("getComponent pass");
         smbMissTurnW.OpenWindow(missPlayer, missTurn);
+        print("ask open window pass");
     }
 
     public void ShowTourBureauWindow(Sprite cellIcon,
@@ -529,6 +544,14 @@ public class UIManager : MonoBehaviour
         GameOverWindow gameOverW = gameOverWindow.GetComponent<GameOverWindow>();
         gameOverW.OpenWindow(winner, winOrDraw);
     }
+
+
+    public void ShowMenuWindow()
+    {
+        ShowWindowWithoutDescription(menuWindow);
+        
+    }
+
 }
 
 

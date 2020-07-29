@@ -9,7 +9,6 @@ public class PlayerSharesWindow : MonoBehaviour
     [SerializeField] CanvasGroup window;
     [SerializeField] Player player;
     
-    bool firstOpen = true;
 
 
 
@@ -20,7 +19,6 @@ public class PlayerSharesWindow : MonoBehaviour
         //чистим акции, которые были
         foreach (Transform child in content)
         {
-            print("Destroy " +child);
             Destroy(child.gameObject);
         }
 
@@ -28,7 +26,6 @@ public class PlayerSharesWindow : MonoBehaviour
         DrawShares();
         foreach (Transform child in content)
         {
-            print("Destroy " + child);
             Destroy(child.gameObject);
         }
         DrawShares();
@@ -52,7 +49,7 @@ public class PlayerSharesWindow : MonoBehaviour
         for (int i = 0; i < player.playerShares.Count; i++)
         {
             GameObject newShareUI = Instantiate(shareUIArea);
-            print("Create " + newShareUI);
+            
             newShareUI.transform.SetParent(content, false);
             ShareUI shareUI = shareUIArea.GetComponent<ShareUI>();
             shareUI.Initialize(player.playerShares[i], 1f);

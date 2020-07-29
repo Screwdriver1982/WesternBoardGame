@@ -33,6 +33,8 @@ public class BuyShareCell : Cell
 
         owner = GameManager.Instance.GetShareOwner(share);
 
+        print("cell owner = " + owner);
+
         if (incomeBeneficiar != null)
         {
             int cashincome=GameManager.Instance.GetShareIncomeCash(resourceShare);
@@ -40,7 +42,7 @@ public class BuyShareCell : Cell
             incomeBeneficiar.WalletChange(cashincome, 0, 0, 0, 0, 0, 0, 0);
         }
 
-        if (owner = null)
+        if (owner == null)
         {
             GameManager.Instance.WhoIsPlayer().WalletChange(0, goldReward, 0, 0, 0, 0, 0, 0);
         }

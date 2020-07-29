@@ -35,6 +35,7 @@ public class GoodsExchangeWindow : MonoBehaviour
 
 
         player = GameManager.Instance.WhoIsPlayer();
+        playerLaborIndex = player.laborIndex;
         currentNumber[0] = player.gold;
         currentNumber[1] = player.oil;
         currentNumber[2] = player.cars;
@@ -42,15 +43,19 @@ public class GoodsExchangeWindow : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
+
             cost[i] = GameManager.Instance.HowMuchDoesGoodCost(i);
+
             if (playerLaborIndex < 0)
             {
                 slider[i].minValue = Mathf.FloorToInt(currentNumber[i] / 2);
+                print(i + " sliderMin = " + slider[i].minValue);
             }
             else
             {
                 slider[i].minValue = 0;
             }
+
             slider[i].maxValue = currentNumber[i] + maxNumbers[i];
             slider[i].value = currentNumber[i];
             afterDealNum[i] = currentNumber[i];
@@ -95,8 +100,17 @@ public class GoodsExchangeWindow : MonoBehaviour
     public void BuyButtonGold()
     {
         if (dealCash[0] + player.cash >= 0)
-        { 
-            GameManager.Instance.ChangePlayerWallet(dealCash[0], afterDealNum[0]- currentNumber[0], 0, 0, 0, 0, 0, 0);
+        {
+            if (player.revenueBlockCard)
+            {
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, -1);
+                player.WalletChange(dealCash[0], afterDealNum[0] - currentNumber[0], 0, 0, 0, 0, 0, 0);
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, 1);
+            }
+            else
+            {
+                player.WalletChange(dealCash[0], afterDealNum[0] - currentNumber[0], 0, 0, 0, 0, 0, 0);
+            }
             dealCash[0] = 0;
             currentNumber[0] = afterDealNum[0];
             ChangeDealCashTxt(0);
@@ -109,32 +123,67 @@ public class GoodsExchangeWindow : MonoBehaviour
     {
         if (dealCash[1] + player.cash >= 0)
         {
-            GameManager.Instance.ChangePlayerWallet(dealCash[1], 0, afterDealNum[1] - currentNumber[1], 0, 0, 0, 0, 0);
+            if (player.revenueBlockCard)
+            {
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, -1);
+                player.WalletChange(dealCash[1], 0, afterDealNum[1] - currentNumber[1], 0, 0, 0, 0, 0);
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, 1);
+            }
+            else
+            {
+                player.WalletChange(dealCash[1], 0, afterDealNum[1] - currentNumber[1], 0, 0, 0, 0, 0);
+            }
             dealCash[1] = 0;
             currentNumber[1] = afterDealNum[1];
             ChangeDealCashTxt(1);
+
+
         }
+
     }
 
     public void BuyButtonCars()
     {
         if (dealCash[2] + player.cash >= 0)
         {
-            GameManager.Instance.ChangePlayerWallet(dealCash[2], 0, 0, afterDealNum[2] - currentNumber[2], 0, 0, 0, 0);
+            if (player.revenueBlockCard)
+            {
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, -1);
+                player.WalletChange(dealCash[2], 0, 0, afterDealNum[2] - currentNumber[2], 0, 0, 0, 0);
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, 1);
+            }
+            else
+            {
+                player.WalletChange(dealCash[2], 0, 0, afterDealNum[2] - currentNumber[2], 0, 0, 0, 0);
+            }
             dealCash[2] = 0;
             currentNumber[2] = afterDealNum[2];
             ChangeDealCashTxt(2);
+
+
         }
     }
 
     public void BuyButtonCola()
     {
+
         if (dealCash[3] + player.cash >= 0)
         {
-            GameManager.Instance.ChangePlayerWallet(dealCash[3], 0, 0, 0, afterDealNum[3] - currentNumber[3], 0, 0, 0);
+            if (player.revenueBlockCard)
+            {
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, -1);
+                player.WalletChange(dealCash[3], 0, 0, 0, afterDealNum[3] - currentNumber[3], 0, 0, 0);
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, 1);
+            }
+            else
+            {
+                player.WalletChange(dealCash[3], 0, 0, 0, afterDealNum[3] - currentNumber[3], 0, 0, 0);
+            }
             dealCash[3] = 0;
             currentNumber[3] = afterDealNum[3];
             ChangeDealCashTxt(3);
+
+
         }
     }
 

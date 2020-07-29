@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Настройки старта игры")]
+    public bool  gameStarted = false;
     [SerializeField] int startingLoan = 50000;
     public int roundBaseMoney = 5000;
     public int movieMoney = 2000;
@@ -58,6 +59,8 @@ public class GameManager : MonoBehaviour
     public Action onCorpCostChanges = delegate { };
     public int[] corpCosts;
     [SerializeField] int[] corpGoodsNumber;
+    public Shares[] donors; //акции, которые делятся прибылью
+    public Shares recepient; //акция с владельцем которой делятся, если он есть (ХММ)
 
     [Header("Товарная биржа")]
     [SerializeField] string[] goodsNames = { "gold", "oil", "cars", "cola" };
@@ -70,11 +73,13 @@ public class GameManager : MonoBehaviour
     [Header("Все акции в игре")]
     [SerializeField] Shares[] allShares;
     [SerializeField] Player[] shareOwner;
+    
 
 
     [Header("Кубик")]
     [SerializeField] Dice dice;
     [SerializeField] GameObject diceCameraObj;
+    [SerializeField] AudioClip throwAudio;
 
 
     [Header("Камеры")]
@@ -94,10 +99,17 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //activeGMState = GameStates.WELCOME_WINDOW;
+        Player playerJ;
+
+        for (int j = 0; j < playerMovements.Length; j++)
+        {
+            playerJ = playerMovements[j].GetComponent<Player>();
+            InitiatePlayer(playerJ);
+
+        }
         activePlayerNum = 0;
         SetPlayerInUI();
-        ChangeGMState(GameStates.TURN_DICE_THROW_WAITING); //нужно будет поменять потом на Старт дайс
+        ChangeGMState(GameStates.START_DICE_THROW_WAITING);
         for (int i = 0; i < tradableShares.Length; i++)
         {
             corpCosts[i] = tradableShares[i].cost;
@@ -105,19 +117,13 @@ public class GameManager : MonoBehaviour
         }
         onCorpCostChanges();
 
+        
+
     }
 
     private void Update()
     {
         StateUpdate();
-
-
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SwitchCameraToFreeCamera();
-
-        }
     }
 
 
@@ -451,17 +457,20 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < cellOrderFromRamboCell.Length; i++)
         {
-            if (cellOrderFromRamboCell[i] == secondPlayerCell)
+            if (cellOrderFromRamboCell[i] == secondPlayerCell && secondPlayer.inGame)
             {
                 victim = secondPlayer.GetComponent<Player>();
+                break;
             }
-            else if (cellOrderFromRamboCell[i] == thirdPlayerCell)
+            else if (cellOrderFromRamboCell[i] == thirdPlayerCell && thirdPlayer.inGame)
             {
                 victim = thirdPlayer.GetComponent<Player>();
+                break;
             }
-            else if (cellOrderFromRamboCell[i] == fourthPlayerCell)
+            else if (cellOrderFromRamboCell[i] == fourthPlayerCell && fourthPlayer.inGame)
             {
                 victim = fourthPlayer.GetComponent<Player>();
+                break;
             }
         }
         print(victim);
@@ -517,7 +526,8 @@ public class GameManager : MonoBehaviour
         player.deposites = 0;
         player.loans = 0;
         player.colonyLoan = 0;
-        player.ReturnAllShares();
+        player.laborIndex = 0;
+
     }
 
 
@@ -550,7 +560,11 @@ public class GameManager : MonoBehaviour
         {
             SetPlayerInUI();
             SwitchCameraToPlayer(playerMovements[activePlayerNum]);
-            StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
+
+            if (activeGMState != GameStates.START_DICE_THROW_WAITING)
+            { 
+                StartCoroutine(ChangePlayerCoroutine(changePlayerTime));
+            }
 
         }
         else
@@ -735,7 +749,7 @@ public class GameManager : MonoBehaviour
             case GameStates.START_DICE_THROW_WAITING:
                 if (!diceRolling)
                 {
-                    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                    if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))&&gameStarted)
                     {
                         ThrowDice();
                     }

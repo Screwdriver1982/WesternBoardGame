@@ -23,10 +23,13 @@ public class BuyShareWindow : MonoBehaviour
 
     public void OpenWindow(Player owner, Shares share, int cost)
     {
+        print("Window owner = " + owner);
         activePlayer = GameManager.Instance.WhoIsPlayer();
         activePlayerMVMNT = GameManager.Instance.WhoIsPlayerMVMNT();
         currCell = activePlayerMVMNT.currentCell;
         ownerTmp = owner;
+
+        print("owner = " + ownerTmp);
         shareTmp = share;
         shareCost = cost;
 
@@ -76,7 +79,7 @@ public class BuyShareWindow : MonoBehaviour
                                               currCell.cellDescription,
                                               currCell.cellWayTitle,
                                               300,
-                                              300,
+                                              50,
                                               "Drugs",
                                               "Other");
                 UIManager.Instance.HideWindow(window);
@@ -102,7 +105,7 @@ public class BuyShareWindow : MonoBehaviour
                                               currCell.cellDescription,
                                               currCell.cellWayTitle,
                                               300,
-                                              300,
+                                              50,
                                               "Drugs",
                                               "Other");
             UIManager.Instance.HideWindow(window);

@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public int moveLeft = 6; //осталось движений в этом ходу
     public int turnMiss; // ходы которые нужно пропустить
     public int extraTurnNumber = 0; //доп.ходы
+    [SerializeField] AudioClip movementSound;
 
     [Header("Параметры текущего перемещения")]
     [SerializeField] bool playerTurn = true;
@@ -390,6 +391,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void AllowMovement()
     {
+        print("allowmovement" + currentCell);
         allowMovement = true;
     }
 
@@ -444,6 +446,7 @@ public class PlayerMovement : MonoBehaviour
 
     void MovementEnded()
     {
+        AudioManager.Instance.PlaySound(movementSound);
         //если попадаем на клетку счетчика кругов в колонии, то включаем поход на второй круг
         if (currentCell.colonyCircleCounter)
         {
@@ -469,10 +472,13 @@ public class PlayerMovement : MonoBehaviour
         if (moveLeft == 0)
         {
             reversMovement = false;
+            print("moveLeft = 0");
             ActivateCell(currentCell);
+            print("currentCell = " + currentCell);
         }
-
+        
         AllowMovement();
+
     }
     void ActivateCell(Cell cell)
     {

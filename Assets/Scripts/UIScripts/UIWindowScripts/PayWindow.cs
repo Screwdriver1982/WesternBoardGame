@@ -49,6 +49,7 @@ public class PayWindow : MonoBehaviour
     Cell cellToMoveWithActionW;
     Cell cellToMoveWithoutActionW;
     Player activePlayer;
+    bool buttonDown = false;
 
     public void OpenWindow(int cashAdd,int goldAdd,int oilAdd,int carsAdd,int colaAdd,int drugsAdd, int robberyAdd, int colonyAdd, Player boss,
             Player beneficiar, int beneficiarFreeCash, Player beneficiarSecond, int beneficiarFreeCashSecond, 
@@ -56,6 +57,7 @@ public class PayWindow : MonoBehaviour
             int police, int army, int woolfy, int rabby, int taxFree, int badHarvest, int mediaCrisis,
                             Cell cellToMoveWithAction, Cell cellToMoveWithoutAction, int revenueBlock)
     {
+        buttonDown = false;
         print("payCashSum " + payCashSum);
         activePlayer = GameManager.Instance.WhoIsPlayer();
         payCashSum = cashAdd;
@@ -183,49 +185,52 @@ public class PayWindow : MonoBehaviour
 
     public void OkButton()
     {
-
-        GameManager.Instance.ChangePlayerWallet(payCashSum, payGoldSum, payOilSum, payCarsSum, payColaSum, payDrugsSum, robbery, colony);
-        GameManager.Instance.ChangeGoodsCost(0, goldCostW);
-        GameManager.Instance.ChangeGoodsCost(1, oilCostW);
-        GameManager.Instance.ChangeGoodsCost(2, carsCostW);
-        GameManager.Instance.ChangeGoodsCost(3, colaCostW);
-        GameManager.Instance.ChangePlayerCards(0, policeW, armyW, woolfyW, rabbyW, taxFreeW, badHarvestW, mediaCrisisW, revenueBlockW);
-        activePlayer.LaborIndexChanges(laborChangesW);
-
-
-        if (bossPlayer != null && payCashSum > 0)
+        if (!buttonDown)
         {
-            GameManager.Instance.ChangeBossWallet(payCashSum, 0, 0, 0, 0, 0, 0, 0);
-        }
-
-        if (beneficiarW != null)
-        {
-            beneficiarW.WalletChange(-payCashSum + beneficiarFreeCashW, 0, 0, 0, 0, 0, 0, 0);
-        }
-
-        if (beneficiarSecondW != null)
-        {
-            beneficiarSecondW.WalletChange(beneficiarFreeCashSecondW, 0, 0, 0, 0, 0, 0, 0);
-        }
+            buttonDown = true;
+            GameManager.Instance.ChangePlayerWallet(payCashSum, payGoldSum, payOilSum, payCarsSum, payColaSum, payDrugsSum, robbery, colony);
+            GameManager.Instance.ChangeGoodsCost(0, goldCostW);
+            GameManager.Instance.ChangeGoodsCost(1, oilCostW);
+            GameManager.Instance.ChangeGoodsCost(2, carsCostW);
+            GameManager.Instance.ChangeGoodsCost(3, colaCostW);
+            GameManager.Instance.ChangePlayerCards(0, policeW, armyW, woolfyW, rabbyW, taxFreeW, badHarvestW, mediaCrisisW, revenueBlockW);
+            activePlayer.LaborIndexChanges(laborChangesW);
 
 
-        if (cellToMoveWithoutActionW != null)
-        {
-            GameManager.Instance.WhoIsPlayerMVMNT().GoToCellWithoutActivation(cellToMoveWithoutActionW);
-            GameManager.Instance.NextPlayerTurn();
-            UIManager.Instance.HideWindow(window);
+            if (bossPlayer != null && payCashSum > 0)
+            {
+                GameManager.Instance.ChangeBossWallet(payCashSum, 0, 0, 0, 0, 0, 0, 0);
+            }
 
-        }
-        else if (cellToMoveWithActionW != null)
-        {
-            GameManager.Instance.WhoIsPlayerMVMNT().JumpToCellAndActivateIt(cellToMoveWithActionW);
-            UIManager.Instance.HideWindow(window);
+            if (beneficiarW != null)
+            {
+                beneficiarW.WalletChange(-payCashSum + beneficiarFreeCashW, 0, 0, 0, 0, 0, 0, 0);
+            }
 
-        }
-        else if (cellToMoveWithoutActionW == null && cellToMoveWithActionW == null)
-        {
-            GameManager.Instance.NextPlayerTurn();
-            UIManager.Instance.HideWindow(window);
+            if (beneficiarSecondW != null)
+            {
+                beneficiarSecondW.WalletChange(beneficiarFreeCashSecondW, 0, 0, 0, 0, 0, 0, 0);
+            }
+
+
+            if (cellToMoveWithoutActionW != null)
+            {
+                GameManager.Instance.WhoIsPlayerMVMNT().GoToCellWithoutActivation(cellToMoveWithoutActionW);
+                GameManager.Instance.NextPlayerTurn();
+                UIManager.Instance.HideWindow(window);
+
+            }
+            else if (cellToMoveWithActionW != null)
+            {
+                GameManager.Instance.WhoIsPlayerMVMNT().JumpToCellAndActivateIt(cellToMoveWithActionW);
+                UIManager.Instance.HideWindow(window);
+
+            }
+            else if (cellToMoveWithoutActionW == null && cellToMoveWithActionW == null)
+            {
+                GameManager.Instance.NextPlayerTurn();
+                UIManager.Instance.HideWindow(window);
+            }
         }
 
     }

@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2eb157ba6670b49822f24724608b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  diceLastThrow: 0
   rb: {fileID: 3924445504344029192}
   brinks:
   - {fileID: 3670478630143940826}
@@ -205,6 +206,8 @@ MonoBehaviour:
   baseAngelMagnitude: 5
   startVelocity: {x: 0, y: 0, z: 0}
   stopFactor: 0.01
+  showResultTime: 2
+  diceSound: {fileID: 8300000, guid: d6f65832bf226924da2dc835ea752414, type: 3}
 --- !u!65 &4544964505947408489
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -17,6 +17,9 @@ public class Dice : MonoBehaviour
     [SerializeField] Vector3 startVelocity;
     [SerializeField] float stopFactor = 0.1f;
     [SerializeField] float showResultTime = 2f;
+    [Header("Звуки кубика")]
+    [SerializeField] AudioClip diceSound;
+    [SerializeField] float soundLag = 0.05f;
 
 
     int throwResult = 0;
@@ -85,5 +88,16 @@ public class Dice : MonoBehaviour
         onDiceStopped();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        StartCoroutine(PlayTookCarautine());
+        
+    }
+
+    IEnumerator PlayTookCarautine()
+    {
+        yield return new WaitForSeconds(soundLag);
+        AudioManager.Instance.PlaySound(diceSound);
+    }
 
 }

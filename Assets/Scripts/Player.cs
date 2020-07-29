@@ -160,14 +160,23 @@ public class Player : MonoBehaviour
         if (soldShare.typeOfShares != "Corporation")
         {
             cost = Mathf.FloorToInt(soldShare.cost * speculationCoef);
-            print("sell from player: " + cost);
-            WalletChange(cost, 0, 0, 0, 0, 0, 0, 0);
+
+            if (revenueBlockCard)
+            {
+                ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, -1);
+                WalletChange(cost, 0, 0, 0, 0, 0, 0, 0);
+                ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, 1);
+            }
+            else
+            {
+                WalletChange(cost, 0, 0, 0, 0, 0, 0, 0);
+            }
             ReturnShare(soldShare);
         }
         else
         {
             cost = Mathf.FloorToInt(GameManager.Instance.GiveCorporationPrice(soldShare)*speculationCoef);
-            print("sell from player: " + cost);
+
             WalletChange(cost, 0, 0, 0, 0, 0, 0, 0);
             ReturnShare(soldShare);
         }
@@ -268,7 +277,7 @@ public class Player : MonoBehaviour
     public void ChangeCards(int boss, int police, int army, int woolfy, int rabby, int taxFree, int badHarvest, int mediaCrisis, int revenueBlock)
     {
         Player bossPlayer = GameManager.Instance.WhoIsBossPlayer();
-        if (boss == 1 && (bossPlayer!=this))
+        if (boss == 1 && (bossPlayer!=this) && (bossPlayer!=null))
         {
             bossPlayer.bossCard = false;
             bossPlayer.onCashChanges();
@@ -360,24 +369,22 @@ public class Player : MonoBehaviour
         carsRevenue = 0;
         colaRevenue = 0;
         stockExchangeIndex = 0;
+        Player recepientOwner = GameManager.Instance.GetShareOwner(GameManager.Instance.recepient);
 
         //идем подряд по всем акциями игрока и считаем, сколько он должен получить чего, тут только подсчет, без выдачи
         for (int i = 0; i < playerShares.Count; i++)
         {   
             Shares shareI = playerShares[i];
+            int shareRevenueI = 0;
             if (shareI.typeOfShares != "Corporation")
             {
                 if ((shareI.typeOfShares == "Plantaion" || shareI.typeOfShares == "DrugsPlantation") && !badHarvestCard
                     || (shareI.typeOfShares == "Media" && !mediaCrisisCard)
                     || shareI.typeOfShares == "Common")
                 {
-                    sharesRevenue += shareI.revenueFix;
+                    shareRevenueI += shareI.revenueFix;
 
-                    print(shareI + " +fix => sharesRevenue = " + sharesRevenue);
-
-                    sharesRevenue += Mathf.RoundToInt(shareI.cost * shareI.revenuePercent);
-
-                    print(shareI + " +percent => sharesRevenue = " + sharesRevenue);
+                    shareRevenueI += Mathf.RoundToInt(shareI.cost * shareI.revenuePercent);
 
                 }
 
@@ -391,18 +398,32 @@ public class Player : MonoBehaviour
             }
             else
             {
-                sharesRevenue += shareI.revenueFix;
+                shareRevenueI += shareI.revenueFix;
 
-                print(shareI + " +fix => sharesRevenue = " + sharesRevenue);
+                shareRevenueI += GameManager.Instance.GiveCorporationPrice(shareI) * Mathf.RoundToInt(shareI.revenuePercent);
 
-                sharesRevenue += GameManager.Instance.GiveCorporationPrice(shareI) * Mathf.RoundToInt(shareI.revenuePercent);
-
-                print(shareI + " +percent => sharesRevenue = " + sharesRevenue);
 
                 carsRevenue += Mathf.FloorToInt(shareI.carsFromCapital * cash / 10000);
                 colaRevenue += Mathf.FloorToInt(shareI.colaFromCapital * cash / 10000);
 
             }
+
+            
+            if (recepientOwner != null)
+            { 
+
+                for (int j = 0; j < GameManager.Instance.donors.Length; j++)
+                {
+                    if (shareI == GameManager.Instance.donors[j])
+                    {
+                        recepientOwner.WalletChange(Mathf.FloorToInt(shareRevenueI * 0.1f), 0, 0, 0, 0, 0, 0, 0);
+                        shareRevenueI = Mathf.FloorToInt(shareRevenueI * 0.9f);
+                    }
+
+                }
+            }
+            sharesRevenue += shareRevenueI;
+
         }
         
         depositeRevenue = Mathf.FloorToInt(deposites * depositePercents);

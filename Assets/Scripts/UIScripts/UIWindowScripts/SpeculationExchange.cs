@@ -17,21 +17,32 @@ public class SpeculationExchange : MonoBehaviour
         //чистим акции, которые были
         foreach (Transform child in content)
         {
-            print("Destroy " + child);
+
             Destroy(child.gameObject);
         }
 
         //рисуем акции игрока
+        DrawShare(playerInit, coef);
+        foreach (Transform child in content)
+        {
+
+            Destroy(child.gameObject);
+        }
+        DrawShare(playerInit, coef);
+
+        coefTxt.text = "x" + coef;
+    }
+
+    private void DrawShare(Player playerInit, float coef)
+    {
         foreach (Shares share in playerInit.playerShares)
         {
             GameObject newShareUI = Instantiate(shareUIArea);
-            print("Create " + newShareUI);
+
             newShareUI.transform.SetParent(content, false);
             shareUI = shareUIArea.GetComponent<ShareUI>();
             shareUI.Initialize(share, coef);
         }
-
-        coefTxt.text = "x" + coef;
     }
 
     public void OkButton()

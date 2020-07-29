@@ -220,7 +220,7 @@ public class PaySmthCell : Cell
                 beneficiar = GameManager.Instance.GetShareOwner(shares[0]);
                 cashAddTemp = activePlayer.AllSharesOneTimeCashIncome();
 
-                if (beneficiar == null || beneficiar == activePlayer)
+                if (beneficiar == activePlayer)
                 {
                     cashAddTemp = 0;
                     beneficiar = null;
@@ -231,9 +231,20 @@ public class PaySmthCell : Cell
 
             case CellPayType.RAMBO:
                 beneficiar = GameManager.Instance.WhoIsPreviousPlayer();
+                
+                
                 if (!beneficiar.armyCard)
                 {
-                    cashAddTemp = beneficiar.cash;
+                    if (beneficiar.cash > 0)
+                    {
+                
+                        cashAddTemp = beneficiar.cash;
+
+                    }
+                    else
+                    {
+                        cashAddTemp = 0;
+                    }
                 }
                 else
                 {
@@ -386,7 +397,7 @@ public class PaySmthCell : Cell
 
         }
 
-        print("cashAddTemp в конце скрипта клетки " + cashAddTemp);
+        
         UIManager.Instance.ShowPaySmthWindow(cellIcon,
                                              cellTitle,
                                              cellDescription,

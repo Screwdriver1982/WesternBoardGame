@@ -15,17 +15,34 @@ public class SmbMissTurnWindow : MonoBehaviour
 
     public void OpenWindow(Player luckyPlayer, int missTurn)
     {
+        print("luckyPlayer = " + luckyPlayer);
         luckyPlayerW = luckyPlayer;
-        noLucky.gameObject.SetActive(luckyPlayerW == null);
-        cap.SetActive(luckyPlayerW != null);
-        capColor.color = luckyPlayerW.playerColor;
         missTurnW = missTurn;
 
+        if (luckyPlayerW == null)
+        {
+            noLucky.gameObject.SetActive(true);
+            cap.SetActive(false);
+        }
+        else
+        {
+            noLucky.gameObject.SetActive(false);
+            cap.SetActive(true);
+            capColor.color = luckyPlayerW.playerColor;
+        }
+        
+        print("ok");
     }
 
     public void OkButton()
     {
-        luckyPlayerW.GetComponent<PlayerMovement>().turnMiss += missTurnW;
+        print("ok Button");
+        if (luckyPlayerW != null)
+        {
+            print("enter ban area");
+            luckyPlayerW.GetComponent<PlayerMovement>().turnMiss += missTurnW;
+        }
+        print("movement = " + GameManager.Instance.WhoIsPlayerMVMNT());
         GameManager.Instance.NextPlayerTurn();
         UIManager.Instance.HideWindow(window);
     }

@@ -157,8 +157,20 @@ public class BuyDrugsWindow : MonoBehaviour
             {
                 addTrinks = afterDealNum - currentNumber;
             }
-            GameManager.Instance.ChangePlayerWallet(dealCash, 0, 0, 0, 0, addDrug, robbery, colony);
-            GameManager.Instance.WhoIsPlayer().trinkets += addTrinks;
+            Player player = GameManager.Instance.WhoIsPlayer();
+
+            if (player.revenueBlockCard)
+            {
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, -1);
+                player.WalletChange(dealCash, 0, 0, 0, 0, addDrug, robbery, colony);
+                player.trinkets += addTrinks;
+                player.ChangeCards(0, 0, 0, 0, 0, 0, 0, 0, 1);
+            }
+            else
+            {
+                player.WalletChange(dealCash, 0, 0, 0, 0, addDrug, robbery, colony);
+                player.trinkets += addTrinks;
+            }
 
             if (getLoan > 0)
             {
